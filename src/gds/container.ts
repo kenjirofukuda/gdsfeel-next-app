@@ -4,40 +4,43 @@ import { GEO } from '../geometry/geo';
 
 export namespace GDS {
   export class Structure extends GObject {
-    _elements: Array<Elements>;
-    
+    _elements: Array<Element>;
+    _dataExtent: GEO.Rectangle | null;
+    hash: any;
+
     constructor() {
       super();
       this._elements = [];
+      this._dataExtent = null;
     }
 
     get name() {
       return this.hash.name;
     }
 
-    addElement(e) {
+    addElement(e: Element) {
       this._elements.push(e);
-      e.parent = this;
+      e.parent = this as GObject;
     };
 
-    elements() {
+    elements(): Array<Element> {
       return this._elements;
     }
 
-    dataExtent() {
+    dataExtent(): GEO.Rectangle {
       if (!this._dataExtent) {
         this._dataExtent = this._lookupDataExtent();
       }
       return this._dataExtent;
     }
 
-    _lookupDataExtent() {
+    _lookupDataExtent(): GEO.Rectangle {
       if (this.elements().length === 0) {
         return GEO.MakeRect(0, 0, 0, 0);
       }
-      let points = [];
-      this.elements().forEach(function (e) {
-        var r = e.dataExtent();
+      let points: Coords = [];
+      this.elements().forEach(function (e: Element) {
+        const r = e.dataExtent();
         r.pointArray().forEach(function (p) {
           points.push(p);
         });
@@ -45,10 +48,10 @@ export namespace GDS {
       return GEO.calcExtentBounds(points);
     }
 
-    loadFromJson(jsonMap) {
+    loadFromJson(jsonMap: any) {
       this.hash = jsonMap;
       const self = this;
-      jsonMap.elements.forEach(function (oElement) {
+      jsonMap.elements.forEach(function (oElement: GDS.Element) {
         const element = GDS.Element.fromObject2(oElement);
         if (element) {
           self.addElement(element);
@@ -62,20 +65,21 @@ export namespace GDS {
   export class Library extends GObject {
     _structures: Array<Structure>;
     _structureMap: Map<string, Structure>;
+    hash: any;
     constructor() {
       super();
       this._structures = [];
-      this._structureMap = {};
+      this._structureMap = new Map<string, Structure>;
     }
 
     addStructure(struct: Structure) {
       this._structures.push(struct);
-      this._structureMap[struct.name] = struct;
+      this._structureMap.set(struct.name, struct);
       struct.parent = this;
     }
 
-    structureNamed(strucName: string): Structure {
-      return this._structureMap[strucName];
+    structureNamed(strucName: string): Structure | undefined {
+      return this._structureMap.get(strucName);
     }
 
     structures(): Array<Structure> {
@@ -91,7 +95,6 @@ export namespace GDS {
         self.addStructure(struct);
       });
     }
-
   }
 
 }

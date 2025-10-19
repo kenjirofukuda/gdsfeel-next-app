@@ -12,6 +12,7 @@ export namespace GEO {
   export const PI_DOUBLE = 2.0 * Math.PI;
 
 
+ 
   export function sameValue(v1: number, v2: number, eps = EPS) {
     return Math.abs(v1 - v2) < eps;
   }
@@ -39,6 +40,9 @@ export namespace GEO {
   type dimensionIndex = 0 | 1 | 2; // x, y, z
   export type IndexedPoint = Array<dimensionIndex>;
   type PointLike = Point | IndexedPoint;
+  export type CE = IndexedPoint;
+  export type Coords = Array<CE>;
+
 
   export class Rectangle extends createjs.Rectangle {
     center(): Point {
@@ -62,7 +66,7 @@ export namespace GEO {
   export class Viewport {
     private width: number;
     private height: number;
-    private scale: number;
+    private _scale: number;
     private centerX: number;
     private centerY: number;
     private portCenterX: number;
@@ -71,13 +75,13 @@ export namespace GEO {
     private _invertTransform: Matrix2D | null;
     private _basicTransform: Matrix2D | null;
     private transformStack: Matrix2D[];
-    private portDamageFunction: ViewportArgProc | null;
-    private transformFunction: MatrixFunction | null;
+    public portDamageFunction: ViewportArgProc | null;
+    public transformFunction: MatrixFunction | null;
 
     constructor(width: number, height: number) {
       this.width = width;
       this.height = height;
-      this.scale = 1.0;
+      this._scale = 1.0;
       this.centerX = 0.0;
       this.centerY = 0.0;
       this._resetPortCenter();
@@ -91,6 +95,8 @@ export namespace GEO {
       this.transformFunction = null;
     }
 
+    get scale(): number { return this._scale; }
+
     get transformDepth(): number {
       return this.transformStack.length;
     }
@@ -100,7 +106,7 @@ export namespace GEO {
       this.portCenterY = this.height - v;
       this.centerX = x;
       this.centerY = y;
-      this.scale = this.scale * (1.0 + (0.125 * direction));
+      this._scale = this._scale * (1.0 + (0.125 * direction));
       this._damageTransform();
     }
 
@@ -113,7 +119,7 @@ export namespace GEO {
     }
 
     setScale(scale: number): void {
-      this.scale = scale;
+      this._scale = scale;
       this._damageTransform();
     }
 
@@ -123,6 +129,11 @@ export namespace GEO {
       this._damageTransform();
     }
 
+    moveCenter(deltaX: number, deltaY: number) {
+      this.centerX += deltaX;
+      this.centerY += deltaY;
+    }
+
     setSize(width: number, height: number) {
       this.width = width;
       this.height = height;
@@ -130,7 +141,7 @@ export namespace GEO {
     }
 
     reset(): void {
-      this.scale = 1.0;
+      this._scale = 1.0;
       this.centerX = 0;
       this.centerY = 0;
       this._damageTransform();
@@ -273,7 +284,7 @@ export namespace GEO {
   }
 
 
-  export function MakePoint(x: number, y: number): createjs.Point {
+  export function MakePoint(x: number, y: number): Point {
     return new Point(x, y);
   }
 

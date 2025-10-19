@@ -3,8 +3,8 @@ import { GEO } from '../geometry/geo';
 
 export namespace GDS {
 
-  export type CE = GEO.IndexedPoint;
-  export type Coords = Array<CE>;
+  export type CE = GEO.CE;
+  export type Coords = GEO.Coords;
 
   export class Element extends GObject {
     hash: any;
@@ -337,7 +337,7 @@ export namespace GDS {
     }
 
     _lookupDataExtent() {
-      return GEO.MakeRect(this.x, this.y);
+      return GEO.MakeRect(this.x, this.y, 0, 0);
     }
   };
 
