@@ -1,12 +1,18 @@
+//import * as createjs from 'createjs';
 
-namespace GEO {
+export namespace GEO {
 
   type ViewportArgProc = (vp: Viewport) => void;
   type MatrixFunction = () => createjs.Matrix2D;
   type WheelDirection = 1 | -1;
-  type Matrix2D = createjs.Matrix2D;
+  export type Matrix2D = createjs.Matrix2D;
 
-  class Point extends createjs.Point {
+  export function MakeMatrix(): Matrix2D {
+    return new createjs.Matrix2D();
+  }
+
+
+  export class Point extends createjs.Point {
     constructor(x: number, y: number) {
       super(x, y);
     }
@@ -21,9 +27,10 @@ namespace GEO {
   }
 
   type dimensionIndex = 0 | 1 | 2; // x, y, z
-  type PointLike = Point | Array<dimensionIndex>;
+  export type IndexedPoint = Array<dimensionIndex>;
+  type PointLike = Point | IndexedPoint;
 
-  class Rectangle extends createjs.Rectangle {
+  export class Rectangle extends createjs.Rectangle {
     center(): Point {
       return new Point(
         this.x + this.width / 2.0,
@@ -41,14 +48,14 @@ namespace GEO {
   }
 
 
-  const EPS = 1e-8;
+  export const EPS = 1e-8;
 
-  function sameValue(v1: number, v2: number, eps = EPS) {
+  export function sameValue(v1: number, v2: number, eps = EPS) {
     return Math.abs(v1 - v2) < eps;
   }
 
 
-  class Viewport {
+  export class Viewport {
     private width: number;
     private height: number;
     private scale: number;
@@ -221,7 +228,7 @@ namespace GEO {
   } // Viewport
 
 
-  function point_x(obj: PointLike): number {
+  export function point_x(obj: PointLike): number {
     if ('x' in obj) {
       return obj['x'];
     }
@@ -230,7 +237,7 @@ namespace GEO {
     }
   };
 
-  function point_y(obj: PointLike): number {
+  export function point_y(obj: PointLike): number {
     if ('y' in obj) {
       return obj['y'];
     }
@@ -240,7 +247,7 @@ namespace GEO {
   };
 
 
-  function calcExtentBounds(points: any[]) {
+  export function calcExtentBounds(points: any[]): Rectangle {
     let minX = Number.MAX_VALUE;
     let maxX = Number.MIN_VALUE;
     let minY = Number.MAX_VALUE;
@@ -257,22 +264,24 @@ namespace GEO {
   };
 
 
-  function MakeRect(x: number, y: number, width: number, height: number): createjs.Rectangle {
-    return new createjs.Rectangle(x, y, width, height);
+  export function MakeRect(x: number, y: number, width: number, height: number): Rectangle {
+    return new Rectangle(x, y, width, height);
   }
 
 
-  function MakePoint(x: number, y: number): createjs.Point {
-    return new createjs.Point(x, y);
+  export function MakePoint(x: number, y: number): createjs.Point {
+    return new Point(x, y);
   }
 
 } // namespace GEO
 
-interface Number {
+
+
+export interface Number {
   roundDigits(dig: number): number;
 }
 
-function floatConvertSyncer(num: number, dig: number): number {
+export function floatConvertSyncer(num: number, dig: number): number {
   const p = Math.pow(10, dig);
   return Math.round(num * p) / p;
 }
