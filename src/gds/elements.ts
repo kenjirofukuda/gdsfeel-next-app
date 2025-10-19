@@ -346,7 +346,7 @@ export namespace GDS {
     let angle = 0.0;
 
     if (x1 == x2) {
-      angle = GDS.PI_HALF * ((y2 > y1) ? 1 : -1);
+      angle = GEO.PI_HALF * ((y2 > y1) ? 1 : -1);
     }
     else {
       angle = Math.atan(Math.abs(y2 - y1) / Math.abs(x2 - x1));
@@ -376,7 +376,7 @@ export namespace GDS {
     const alpha = getAngle(p1[0], p1[1], p2[0], p2[1]);
     const beta = getAngle(p2[0], p2[1], p3[0], p3[1]);
     const theta = (alpha + beta + Math.PI) / 2.0;
-    if (Math.abs(Math.cos((alpha - beta) / 2.0)) < GDS.EPS) {
+    if (Math.abs(Math.cos((alpha - beta) / 2.0)) < GEO.EPS) {
 
       throw new Error('Internal algorithm error: cos((alpha - beta)/2) = 0');
       result[0] = 0.0;

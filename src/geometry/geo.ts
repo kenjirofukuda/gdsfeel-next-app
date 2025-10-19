@@ -7,6 +7,16 @@ export namespace GEO {
   type WheelDirection = 1 | -1;
   export type Matrix2D = createjs.Matrix2D;
 
+  export const EPS = 1e-8;
+  export const PI_HALF = 0.5 * Math.PI;
+  export const PI_DOUBLE = 2.0 * Math.PI;
+
+
+  export function sameValue(v1: number, v2: number, eps = EPS) {
+    return Math.abs(v1 - v2) < eps;
+  }
+
+
   export function MakeMatrix(): Matrix2D {
     return new createjs.Matrix2D();
   }
@@ -47,12 +57,6 @@ export namespace GEO {
     };
   }
 
-
-  export const EPS = 1e-8;
-
-  export function sameValue(v1: number, v2: number, eps = EPS) {
-    return Math.abs(v1 - v2) < eps;
-  }
 
 
   export class Viewport {
