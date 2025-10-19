@@ -1,7 +1,3 @@
-/* global createjs */
-
-"use strict";
-
 const GEO = {};
 
 GEO.EPS = 1e-8;
@@ -239,7 +235,7 @@ createjs.Rectangle.prototype.pointArray = function () {
 };
 
 
-function floatConvertSyncer(num, dig) {
+function floatConvertSyncer(num: number, dig) {
   const p = Math.pow(10, dig);
   return Math.round(num * p) / p;
 }
