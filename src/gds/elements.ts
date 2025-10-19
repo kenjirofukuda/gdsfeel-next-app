@@ -1,12 +1,15 @@
+/// <reference path="gds.ts" />
+/// <reference path="container.ts" />
 import { GEO } from '../geometry/geo';
-/// <reference path="./gds.ts" />
+import { GDS as base } from './gds';
+import { GDS as container } from './container';
 
 export namespace GDS {
 
   export type CE = GEO.CE;
   export type Coords = GEO.Coords;
 
-  export class Element extends GObject {
+  export class Element extends base.GObject {
     hash: any;
     _vertices: Coords | null;
     _dataExtent: GEO.Rectangle | null;
@@ -67,7 +70,7 @@ export namespace GDS {
       return this.hash.map['LAYER'] || 0;
     }
 
-    attrOn(stream: any) {
+    attrOn(stream: any): void {
       stream['vertices'] = this.vertices();
       stream['elkey'] = this.hash.elkey;
       stream['datatype'] = this.datatype;
@@ -97,7 +100,7 @@ export namespace GDS {
 
   export class Sref extends Element {
     _transform: GEO.Matrix2D | null;
-    _refStructure: Structure | null;
+    _refStructure: container.Structure | null | undefined;
     constructor(hash: any) {
       super(hash);
       this._refStructure = null;
@@ -128,14 +131,14 @@ export namespace GDS {
       return this.hash.map['MAG'] || 1.0;
     }
 
-    get refStructure(): Structure {
+    get refStructure(): container.Structure | undefined {
       if (this._refStructure === null) {
-        this._refStructure = this.root().structureNamed(this.refName);
+        this._refStructure = (this.root() as container.Library).structureNamed(this.refName);
       }
       return this._refStructure;
     }
 
-    attrOn(stream: any) {
+    attrOn(stream: any): void {
       super.attrOn(stream);
       stream['refName'] = this.refName;
       stream['reflected'] = this.reflected;
@@ -146,14 +149,14 @@ export namespace GDS {
       stream['transform'] = this.transform();
     }
 
-    transform() {
+    transform(): GEO.Matrix2D {
       if (!this._transform) {
         this._transform = this._lookupTransform2();
       }
       return this._transform;
     }
 
-    _lookupTransform() {
+    _lookupTransform(): GEO.Matrix2D {
       const tx = GEO.MakeMatrix();
       tx.translate(this.x, this.y);
       tx.scale(this.magnify, this.magnify);
@@ -164,7 +167,7 @@ export namespace GDS {
       return tx;
     }
 
-    _lookupTransform2() {
+    _lookupTransform2(): GEO.Matrix2D {
       const rtx = new createjs.Matrix2D();
       const rad = this.angleDegress * Math.PI / 180;
       const radCos = Math.cos(rad);
@@ -196,7 +199,7 @@ export namespace GDS {
       this._repeatedTransforms = [];
     }
 
-    attrOn(stream: any) {
+    attrOn(stream: any): void {
       super.attrOn(stream);
       stream['cols'] = this.cols;
       stream['rows'] = this.rows;
@@ -205,15 +208,15 @@ export namespace GDS {
       stream['repeatedTransforms'] = this.repeatedTransforms();
     }
 
-    get cols() {
+    get cols(): number {
       return (this.hash.map['COLROW'])[0];
     }
 
-    get rows() {
+    get rows(): number {
       return (this.hash.map['COLROW'])[1];
     }
 
-    get colStep() {
+    get colStep(): number {
       if (!this._colStep) {
         this._colStep = 0.0;
         const invertTx = this.transform().clone().invert();
@@ -227,7 +230,7 @@ export namespace GDS {
       return this._colStep;
     }
 
-    get rowStep() {
+    get rowStep(): number {
       if (!this._rowStep) {
         this._rowStep = 0.0;
         const invertTx = this.transform().clone().invert();
@@ -261,7 +264,7 @@ export namespace GDS {
   }
 
 
-  class Path extends GDS.Element {
+  export class Path extends GDS.Element {
     _outlineCoords: Coords | null;
  
     constructor(jsonMap: any) {
@@ -295,11 +298,11 @@ export namespace GDS {
   };
 
 
-  class Boundary extends GDS.Element {
+  export class Boundary extends GDS.Element {
   }
 
 
-  class Text extends GDS.Element {
+  export class Text extends GDS.Element {
     get string() {
       return this.hash.map['STRING'];
     }
@@ -413,7 +416,7 @@ export namespace GDS {
       points.push([0, 0]);
     }
     let deltaxy = getEndDeltaXY(hw, coords[0], coords[1]);
-    if (pathType === GDS.BUTT_END) {
+    if (pathType === base.BUTT_END) {
       points[0][0] = coords[0][0] + deltaxy[0];
       points[0][1] = coords[0][1] + deltaxy[1];
       points[2 * numPoints][0] = coords[0][0] + deltaxy[0];
@@ -439,7 +442,7 @@ export namespace GDS {
     }
 
     deltaxy = getEndDeltaXY(hw, coords[numPoints - 2], coords[numPoints - 1]);
-    if (pathType === GDS.BUTT_END) {
+    if (pathType === base.BUTT_END) {
       points[numPoints - 1][0] = coords[numPoints - 1][0] + deltaxy[0];
       points[numPoints - 1][1] = coords[numPoints - 1][1] + deltaxy[1];
       points[numPoints][0] = coords[numPoints - 1][0] - deltaxy[0];

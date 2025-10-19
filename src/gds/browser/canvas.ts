@@ -1,20 +1,24 @@
 
+/// <reference path="../gds.ts" />
+/// <reference path="../elements.ts" />
+/// <reference path="../container.ts" />
 /**
  * Browser only
  */
 import { GEO } from '../../geometry/geo';
-/// <reference path="../gds.ts" />
-/// <reference path="../elements.ts" />
+import { GDS as base } from '../gds';
+import { GDS as elems } from '../elements';
+import { GDS as container } from '../container';
 
 namespace GDS {
+
+  type Coords = elems.Coords;
 
   export interface Canvas2D extends CanvasRenderingContext2D {
     _structureView: StructureView;
   }
 
-  export interface Element {
-    drawOn(ctx: Canvas2D, port: GEO.Viewport): void
-  }
+
 
   function strokeSlantCrossV1(ctx: Canvas2D, port: GEO.Viewport, x: number, y: number): void {
     const unit = 3;
@@ -61,80 +65,102 @@ namespace GDS {
   }
 
 
-  Element.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    // subclass must be override
-  };
-
-  Text.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    ctx.font = "bold 16px Arial";
-    ctx.strokeStyle = "purple";
-    ctx.strokeText(this.hash.map['STRING'], this.x, this.y);
-  };
-
-  Boundary.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    strokePoints(ctx, port, this.vertices(), true);
-  };
-
-  Path.prototype.strokeCenterline = function (ctx: Canvas2D, port: GEO.Viewport) {
-    strokePoints(ctx, port, this.vertices());
-  };
-
-  Path.prototype.strokeOutline = function (ctx: Canvas2D, port: GEO.Viewport) {
-    strokePoints(ctx, port, this.outlineCoords());
-  };
-
-  Path.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    ctx.strokeStyle = "black";
-    this.strokeCenterline(ctx, port);
-    this.strokeOutline(ctx, port);
-  };
-
-  Sref.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    const mat = this.transform();
-    ctx.save();
-    port.pushTransform(mat);
-    ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
-
-    ctx.strokeStyle = "black";
-    ctx._structureView.drawStructure(ctx: Canvas2D, port: GEO.Viewport, this.refStructure);
-
-    ctx.restore();
-    port.popTransform();
-    ctx.strokeStyle = "blue";
-    strokeSlantCross(ctx: Canvas2D, port: GEO.Viewport, this.x, this.y);
-  };
-
-  Aref.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    if (this.refName === 'PC' && this.hash.elkey === 5) {
-      const debug = true;
+  class Element extends elems.Element {
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      // subclass must be override
     }
-    for (let mat of this.repeatedTransforms()) {
+  }
+
+  class Text extends elems.Text {
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      ctx.font = "bold 16px Arial";
+      ctx.strokeStyle = "purple";
+      ctx.strokeText(this.hash.map['STRING'], this.x, this.y);
+    }
+  }
+
+  class Boundary extends elems.Boundary {
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      strokePoints(ctx, port, this.vertices(), true);
+    };
+  }
+
+
+  class Path extends elems.Path {
+    strokeCenterline(ctx: Canvas2D, port: GEO.Viewport): void {
+      strokePoints(ctx, port, this.vertices());
+    };
+    strokeOutline(ctx: Canvas2D, port: GEO.Viewport): void {
+      strokePoints(ctx, port, this.outlineCoords());
+    };
+
+    // @override
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      ctx.strokeStyle = "black";
+      this.strokeCenterline(ctx, port);
+      this.strokeOutline(ctx, port);
+    };
+
+  }
+
+  class Sref extends elems.Sref {
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      if (! this.refStructure) {
+        return;
+      }
+      const mat = this.transform();
       ctx.save();
       port.pushTransform(mat);
       ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
 
-      ctx.strokeStyle = "brown";
-      ctx._structureView.drawStructure(ctx: Canvas2D, port: GEO.Viewport, this.refStructure);
+      ctx.strokeStyle = "black";
+      ctx._structureView.drawStructure(ctx, port, this.refStructure);
 
-      port.popTransform();
       ctx.restore();
-      ctx.strokeStyle = "orange";
-      strokeSlantCross(ctx: Canvas2D, port: GEO.Viewport, mat.tx, mat.ty);
+      port.popTransform();
+      ctx.strokeStyle = "blue";
+      strokeSlantCross(ctx, port, this.x, this.y);
+    };
+  }
+
+  class Aref extends elems.Aref {
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      if (! this.refStructure) {
+        return;
+      }
+      if (this.refName === 'PC' && this.hash.elkey === 5) {
+        const debug = true;
+      }
+      for (let mat of this.repeatedTransforms()) {
+        ctx.save();
+        port.pushTransform(mat);
+        ctx.transform(mat.a, mat.b, mat.c, mat.d, mat.tx, mat.ty);
+
+        ctx.strokeStyle = "brown";
+        ctx._structureView.drawStructure(ctx, port, this.refStructure);
+
+        port.popTransform();
+        ctx.restore();
+        ctx.strokeStyle = "orange";
+        strokeSlantCross(ctx, port, mat.tx, mat.ty);
+      }
+      ctx.strokeStyle = "red";
+      strokeSlantCross(ctx, port, this.x, this.y);
     }
-    ctx.strokeStyle = "red";
-    strokeSlantCross(ctx: Canvas2D, port: GEO.Viewport, this.x, this.y);
-  };
-
-  Point.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport) {
-    strokePoints(ctx: Canvas2D, port: GEO.Viewport, this.x, this.y);
-  };
+  }
 
 
-  class Tracking {
+  class Point extends elems.Point {
+    drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
+      strokeSlantCross(ctx, port, this.x, this.y);
+    };
+  }
+
+  export class Tracking {
     view: StructureView;
     element: HTMLElement;
     down: boolean;
-    points: Coods;
+    points: Array<GEO.Point>;
     upPoint: GEO.Point;
     downPoint: GEO.Point;
     currPoint: GEO.Point;
@@ -142,6 +168,7 @@ namespace GDS {
     constructor(view: StructureView) {
       this.view = view;
       this.element = view.context().canvas;
+      this.points = [];
       this.down = false;
       this.downPoint = GEO.MakePoint(0, 0);
       this.currPoint = GEO.MakePoint(0, 0);
@@ -150,7 +177,7 @@ namespace GDS {
       this.registerWheel();
     }
 
-    registerWheel() {
+    registerWheel(): void {
       const self = this;
       const mousewheelevent = "onwheel" in document ? "wheel" : "onmousewheel" in document ? "mousewheel" : "DOMMouseScroll";
       $(this.view.portId).on(mousewheelevent, function (e) {
@@ -164,7 +191,7 @@ namespace GDS {
       });
     }
 
-    registerHandler() {
+    registerHandler(): void {
       const self = this;
       this.element.addEventListener("mousedown", function (evt) {
         self.down = true;
@@ -208,13 +235,13 @@ namespace GDS {
 
   class StructureView {
     portId: string;
-    _structure: Structure;
+    _structure:  container.Structure;
     ctx: Canvas2D;
     port: GEO.Viewport;
     track: Tracking;
     needsRedraw: boolean;
 
-    constructor(portId: string, structure: Structure) {
+    constructor(portId: string, structure: container.Structure) {
       const self = this;
       this.portId = portId;
       this._structure = structure;
@@ -243,13 +270,13 @@ namespace GDS {
     }
 
     context(): Canvas2D {
-      const canvas = document.getElementById(this.portId);
-      const ctx = canvas.getContext("2d") as Canvas2D;
+      const canvas = <HTMLCanvasElement>document.getElementById(this.portId);
+      const ctx = <Canvas2D>canvas.getContext("2d");
       ctx._structureView = this;
       return ctx;
     }
 
-    addMouseMoveListener(proc): void {
+    addMouseMoveListener(proc: EventListenerOrEventListenerObject): void {
       this.context().canvas.addEventListener("mousemove", proc);
     }
 
@@ -277,12 +304,12 @@ namespace GDS {
 
     }
 
-    drawStructure(ctx: Canvas2D, port: GEO.Viewport, structure: Structure): void {
+    drawStructure(ctx: Canvas2D, port: GEO.Viewport, structure: container.Structure): void {
       this.drawElements(ctx, port, structure.elements());
     }
 
-    drawElements(ctx: Canvas2D, port: GEO.Viewport, elements: Array<Element>): void {
-      elements.forEach(function (e: Element) {
+    drawElements(ctx: Canvas2D, port: GEO.Viewport, elements: Array<elems.Element>): void {
+      elements.forEach(function (e: elems.Element) {
         e.drawOn(ctx, port);
       });
     }

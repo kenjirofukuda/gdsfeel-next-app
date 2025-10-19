@@ -1,9 +1,15 @@
-import { GEO } from '../geometry/geo';
 /// <reference path="./gds.ts" />
 /// <reference path="./elements.ts" />
+import { GEO } from '../geometry/geo';
+import { GDS as base } from './gds';
+import { GDS as elems } from './elements';
+
+export type Element = elems.Element;
+export type Coords = elems.Coords;
 
 export namespace GDS {
-  export class Structure extends GObject {
+
+  export class Structure extends base.GObject {
     _elements: Array<Element>;
     _dataExtent: GEO.Rectangle | null;
     hash: any;
@@ -20,7 +26,7 @@ export namespace GDS {
 
     addElement(e: Element) {
       this._elements.push(e);
-      e.parent = this as GObject;
+      e.parent = this as base.GObject;
     };
 
     elements(): Array<Element> {
@@ -41,8 +47,8 @@ export namespace GDS {
       let points: Coords = [];
       this.elements().forEach(function (e: Element) {
         const r = e.dataExtent();
-        r.pointArray().forEach(function (p) {
-          points.push(p);
+        r.pointArray().forEach(function (p: GEO.Point) {
+          points.push([p.x, p.y] as GEO.CE);
         });
       });
       return GEO.calcExtentBounds(points);
@@ -51,8 +57,8 @@ export namespace GDS {
     loadFromJson(jsonMap: any) {
       this.hash = jsonMap;
       const self = this;
-      jsonMap.elements.forEach(function (oElement: GDS.Element) {
-        const element = GDS.Element.fromObject2(oElement);
+      jsonMap.elements.forEach(function (oElement: Element) {
+        const element = elems.Element.fromObject2(oElement);
         if (element) {
           self.addElement(element);
         }
@@ -62,7 +68,7 @@ export namespace GDS {
   };
 
 
-  export class Library extends GObject {
+  export class Library extends base.GObject {
     _structures: Array<Structure>;
     _structureMap: Map<string, Structure>;
     hash: any;

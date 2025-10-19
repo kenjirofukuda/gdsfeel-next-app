@@ -12,7 +12,7 @@ export namespace GEO {
   export const PI_DOUBLE = 2.0 * Math.PI;
 
 
- 
+
   export function sameValue(v1: number, v2: number, eps = EPS) {
     return Math.abs(v1 - v2) < eps;
   }
@@ -291,16 +291,17 @@ export namespace GEO {
 } // namespace GEO
 
 
+// namespace global {
+//   export interface Number {
+//     roundDigits(dig: number): number;
+//   }
 
-export interface Number {
-  roundDigits(dig: number): number;
-}
+//   export function floatConvertSyncer(num: number, dig: number): number {
+//     const p = Math.pow(10, dig);
+//     return Math.round(num * p) / p;
+//   }
 
-export function floatConvertSyncer(num: number, dig: number): number {
-  const p = Math.pow(10, dig);
-  return Math.round(num * p) / p;
-}
-
-Number.prototype.roundDigits = function (dig: number): number {
-  return floatConvertSyncer(this as number, dig);
-};
+//   Number.prototype.roundDigits = function (dig: number): number {
+//     return floatConvertSyncer(this as number, dig);
+//   };
+// }
