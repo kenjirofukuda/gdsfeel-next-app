@@ -74,7 +74,7 @@ namespace GDS {
     }
   }
 
-  class Text extends elems.Text {
+  export class Text extends elems.Text {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
       ctx.font = "bold 16px Arial";
       ctx.strokeStyle = "purple";
@@ -82,14 +82,14 @@ namespace GDS {
     }
   }
 
-  class Boundary extends elems.Boundary {
+  export class Boundary extends elems.Boundary {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
       strokePoints(ctx, port, this.vertices(), true);
     };
   }
 
 
-  class Path extends elems.Path {
+  export class Path extends elems.Path {
     strokeCenterline(ctx: Canvas2D, port: GEO.Viewport): void {
       strokePoints(ctx, port, this.vertices());
     };
@@ -106,7 +106,7 @@ namespace GDS {
 
   }
 
-  class Sref extends elems.Sref {
+  export class Sref extends elems.Sref {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
       if (!this.refStructure) {
         return;
@@ -126,7 +126,7 @@ namespace GDS {
     };
   }
 
-  class Aref extends elems.Aref {
+  export class Aref extends elems.Aref {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
       if (!this.refStructure) {
         return;
@@ -153,7 +153,7 @@ namespace GDS {
   }
 
 
-  class Point extends elems.Point {
+  export class Point extends elems.Point {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
       strokeSlantCross(ctx, port, this.x, this.y);
     };
