@@ -1,0 +1,49 @@
+#+title: gdsfeel-js
+#+author: kenjirofukuda@gmail.com
+#+options: toc:nil num:nil ^:nil ^:{}
+#+HTML_HEAD_EXTRA: <style> .figure p {text-align: left;}</style>
+
+* GdsFeel TypeScript実装
+
+関連リポジトリ、[[https://github.com/kenjirofukuda/gdsfeel-php][gdsfeel-php]] のJavaScript実装を抜き出して型ヒントを付加したもの。
+
+- 親リポジトリ :: [[https://github.com/kenjirofukuda/gdsfeel-common][gdsfeel-common]]
+
+#+begin_src
+.
+├── dist                   # <---- ignore
+│   ├── gds
+│   │   ├── browser
+│   │   │   └── canvas.js
+│   │   ├── container.js
+│   │   ├── elements.js
+│   │   └── gds.js
+│   └── geometry
+│       └── geo.js
+├── gdsjs                  # <---- gdsfeel-php時代のバニラjs (参考同居) 動作確認が取れたら削除
+│   ├── gds-canvas.js
+│   ├── gds-container.js
+│   ├── gds-elements.js
+│   ├── gds.js
+│   └── geo.js
+├── package.json
+├── package-lock.json
+├── README.org
+├── src                    # <----- TypeScript 実装
+│   ├── gds                # gds/直下は、browser/server共通
+│   │   ├── browser
+│   │   │   └── canvas.ts
+│   │   ├── server         # <---- 未実装 nodejs 学習中
+│   │   │   │── inform.ts
+│   │   │   └── outform.ts
+│   │   ├── container.ts
+│   │   ├── elements.ts
+│   │   └── gds.ts
+│   └── geometry
+│       └── geo.ts
+└── tsconfig.json
+#+end_src
+
+* TODO createjs.Matrix2D から DOMMatrix への変更
+
+- https://developer.mozilla.org/ja/docs/Web/API/DOMMatrix
