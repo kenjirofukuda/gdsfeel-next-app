@@ -18,7 +18,10 @@ namespace GDS {
     _structureView: StructureView;
   }
 
-
+  type CustomWheelEvent = WheelEvent & {
+    readonly wheelDelta?: number;
+    readonly wheelDeltaY?: number;
+  };
 
   function strokeSlantCrossV1(ctx: Canvas2D, port: GEO.Viewport, x: number, y: number): void {
     const unit = 3;
@@ -65,7 +68,7 @@ namespace GDS {
   }
 
 
-  class Element extends elems.Element {
+  export class Element extends elems.Element {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
       // subclass must be override
     }
@@ -105,7 +108,7 @@ namespace GDS {
 
   class Sref extends elems.Sref {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
-      if (! this.refStructure) {
+      if (!this.refStructure) {
         return;
       }
       const mat = this.transform();
@@ -125,7 +128,7 @@ namespace GDS {
 
   class Aref extends elems.Aref {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void {
-      if (! this.refStructure) {
+      if (!this.refStructure) {
         return;
       }
       if (this.refName === 'PC' && this.hash.elkey === 5) {
@@ -180,14 +183,17 @@ namespace GDS {
     registerWheel(): void {
       const self = this;
       const mousewheelevent = "onwheel" in document ? "wheel" : "onmousewheel" in document ? "mousewheel" : "DOMMouseScroll";
-      $(this.view.portId).on(mousewheelevent, function (e) {
+      $(this.view.portId).on(mousewheelevent, function (e: JQuery.TriggeredEvent) {
         e.preventDefault();
-        const delta = e.originalEvent.deltaY ? -(e.originalEvent.deltaY) : e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -(e.originalEvent.detail);
-        // console.log(e);
-        const p = GEO.MakePoint(e.originalEvent.offsetX, e.originalEvent.offsetY);
-        const dir = delta < 0 ? -1.0 : 1.0;
-        const center = self.view.port.deviceToWorld(p.x, p.y);
-        self.view.port.wheelZoom(p.x, p.y, center.x, center.y, dir);
+        if (e.originalEvent) {
+          const evt = e.originalEvent as CustomWheelEvent;
+          const delta = evt.deltaY ? -(evt.deltaY) : evt.wheelDelta ? evt.wheelDelta : -(evt.detail);
+          // console.log(e);
+          const p = GEO.MakePoint(evt.offsetX, evt.offsetY);
+          const dir = delta < 0 ? -1.0 : 1.0;
+          const center = self.view.port.deviceToWorld(p.x, p.y);
+          self.view.port.wheelZoom(p.x, p.y, center.x, center.y, dir);
+        }
       });
     }
 
@@ -235,7 +241,7 @@ namespace GDS {
 
   class StructureView {
     portId: string;
-    _structure:  container.Structure;
+    _structure: container.Structure;
     ctx: Canvas2D;
     port: GEO.Viewport;
     track: Tracking;
@@ -310,7 +316,7 @@ namespace GDS {
 
     drawElements(ctx: Canvas2D, port: GEO.Viewport, elements: Array<elems.Element>): void {
       elements.forEach(function (e: elems.Element) {
-        e.drawOn(ctx, port);
+        (e as GDS.Element).drawOn(ctx, port);
       });
     }
 
