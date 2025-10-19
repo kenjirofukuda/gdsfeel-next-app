@@ -2,5 +2,9 @@
   "devDependencies": {
     "@types/node": "^24.8.1",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/createjs": "^0.0.32",
+    "createjs": "^1.0.1"
   }
 }
