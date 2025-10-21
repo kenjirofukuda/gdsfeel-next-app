@@ -1,11 +1,25 @@
 {
+  "type": "module",
   "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
+    "@babel/preset-env": "^7.28.3",
     "@types/jquery": "^3.5.33",
     "@types/node": "^24.8.1",
+    "fix-esm-import-path": "^1.10.3",
+    "npm-run-all": "^4.1.5",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@types/createjs": "^0.0.32",
     "createjs": "^1.0.1"
+  },
+  "scripts": {
+    "build": "run-s tsc fix",
+    "test": "run-s build js",
+    "tsc": "tsc -p .",
+    "fix": "fix-esm-import-path dist/",
+    "js": "node dist/test"
   }
 }
