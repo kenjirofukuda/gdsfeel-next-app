@@ -1,3 +1,4 @@
+/// <reference path="../../geometry/geo.ts" />
 /// <reference path="../gds.ts" />
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />

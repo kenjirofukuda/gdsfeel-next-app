@@ -1,6 +1,7 @@
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
+
 namespace GDS {
 
   export type CE = GEO.CE;
@@ -185,14 +186,14 @@ namespace GDS {
   }
 
   export class Aref extends Sref {
-      _rowStep: number;
-      _colStep: number;
+      _rowStep: number | null;
+      _colStep: number | null;
       _repeatedTransforms: GEO.Matrix2D[] | null;
 
     constructor(hash: any) {
       super(hash);
-      this._rowStep = 1;
-      this._colStep = 1;
+      this._rowStep = null;
+      this._colStep = null;
       this._repeatedTransforms = null;
     }
 
