@@ -6,20 +6,22 @@
 * GdsFeel TypeScript実装
 
 関連リポジトリ、[[https://github.com/kenjirofukuda/gdsfeel-php][gdsfeel-php]] のJavaScript実装を抜き出して型ヒントを付加したもの。
+- <2025-10-21 Tue> gdsfeel-php に単一ファイルにまとめた、gdsall.js を実験使用中
 
 - 親リポジトリ :: [[https://github.com/kenjirofukuda/gdsfeel-common][gdsfeel-common]]
 
 #+begin_src
 .
 ├── dist                   # <---- ignore
-│   ├── gds
+│   ├── gds                # <---- gdsall.js で置き換えた。
 │   │   ├── browser
 │   │   │   └── canvas.js
 │   │   ├── container.js
 │   │   ├── elements.js
 │   │   └── gds.js
-│   └── geometry
-│       └── geo.js
+│   ├── geometry           # <---- gdsall.js で置き換えた。
+│   ├    └── geo.js
+│   ├── gdsall.js          # <---- 現在は単一ファイルにまとめたものを使用
 ├── gdsjs                  # <---- gdsfeel-php時代のバニラjs (参考同居) 動作確認が取れたら削除
 │   ├── gds-canvas.js
 │   ├── gds-container.js
@@ -44,6 +46,7 @@
 └── tsconfig.json
 #+end_src
 
-* TODO createjs.Matrix2D から DOMMatrix への変更
+* [TODO]
+** TODO createjs.Matrix2D から DOMMatrix への変更
 
 - https://developer.mozilla.org/ja/docs/Web/API/DOMMatrix
