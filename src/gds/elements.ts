@@ -1,15 +1,12 @@
+/// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
-import { GEO } from '../geometry/geo';
-import { GDS as base } from './gds';
-import { GDS as container } from './container';
-
-export namespace GDS {
+namespace GDS {
 
   export type CE = GEO.CE;
   export type Coords = GEO.Coords;
 
-  export class Element extends base.GObject {
+  export class Element extends GObject {
     hash: any;
     _vertices: Coords | null;
     _dataExtent: GEO.Rectangle | null;
@@ -100,7 +97,7 @@ export namespace GDS {
 
   export class Sref extends Element {
     _transform: GEO.Matrix2D | null;
-    _refStructure: container.Structure | null | undefined;
+    _refStructure: Structure | null | undefined;
     constructor(hash: any) {
       super(hash);
       this._refStructure = null;
@@ -131,9 +128,9 @@ export namespace GDS {
       return this.hash.map['MAG'] || 1.0;
     }
 
-    get refStructure(): container.Structure | undefined {
+    get refStructure(): Structure | undefined {
       if (this._refStructure === null) {
-        this._refStructure = (this.root() as container.Library).structureNamed(this.refName);
+        this._refStructure = (this.root() as Library).structureNamed(this.refName);
       }
       return this._refStructure;
     }
@@ -190,13 +187,13 @@ export namespace GDS {
   export class Aref extends Sref {
       _rowStep: number;
       _colStep: number;
-      _repeatedTransforms: GEO.Matrix2D[];
+      _repeatedTransforms: GEO.Matrix2D[] | null;
 
     constructor(hash: any) {
       super(hash);
       this._rowStep = 1;
       this._colStep = 1;
-      this._repeatedTransforms = [];
+      this._repeatedTransforms = null;
     }
 
     attrOn(stream: any): void {
@@ -266,7 +263,7 @@ export namespace GDS {
 
   export class Path extends GDS.Element {
     _outlineCoords: Coords | null;
- 
+
     constructor(jsonMap: any) {
       super(jsonMap);
       this._outlineCoords = null;
@@ -402,7 +399,6 @@ export namespace GDS {
     return result;
   };
 
-
   function pathOutlineCoords(coords: Coords, pathType: number, width: number): Coords {
     const points = [];
     const hw = width / 2.0;
@@ -416,7 +412,7 @@ export namespace GDS {
       points.push([0, 0]);
     }
     let deltaxy = getEndDeltaXY(hw, coords[0], coords[1]);
-    if (pathType === base.BUTT_END) {
+    if (pathType === BUTT_END) {
       points[0][0] = coords[0][0] + deltaxy[0];
       points[0][1] = coords[0][1] + deltaxy[1];
       points[2 * numPoints][0] = coords[0][0] + deltaxy[0];
@@ -442,7 +438,7 @@ export namespace GDS {
     }
 
     deltaxy = getEndDeltaXY(hw, coords[numPoints - 2], coords[numPoints - 1]);
-    if (pathType === base.BUTT_END) {
+    if (pathType === BUTT_END) {
       points[numPoints - 1][0] = coords[numPoints - 1][0] + deltaxy[0];
       points[numPoints - 1][1] = coords[numPoints - 1][1] + deltaxy[1];
       points[numPoints][0] = coords[numPoints - 1][0] - deltaxy[0];
@@ -458,5 +454,3 @@ export namespace GDS {
   };
 
 }
-
-

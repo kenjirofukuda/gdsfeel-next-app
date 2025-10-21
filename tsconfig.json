@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "es2020",
+    "target": "es5",
+    "module": "amd",
     "outDir": "./dist",
+    "outFile": "./dist/gdsall.js",
     "esModuleInterop": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "skipLibCheck": true,
   },
   "include": ["src/**/*"]
