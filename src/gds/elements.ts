@@ -380,9 +380,6 @@ namespace GDS {
     if (Math.abs(Math.cos((alpha - beta) / 2.0)) < GEO.EPS) {
 
       throw new Error('Internal algorithm error: cos((alpha - beta)/2) = 0');
-      result[0] = 0.0;
-      result[1] = 0.0;
-      return result;
     }
     const r = hw / Math.cos((alpha - beta) / 2.0);
     result[0] = r * Math.cos(theta);

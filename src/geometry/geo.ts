@@ -125,6 +125,7 @@ namespace GEO {
     moveCenter(deltaX: number, deltaY: number) {
       this.centerX += deltaX;
       this.centerY += deltaY;
+      this._damageTransform();
     }
 
     setSize(width: number, height: number) {
@@ -158,13 +159,13 @@ namespace GEO {
     }
 
     deviceToWorld(h: number, v: number): Point {
-      //    const result = MakePoint(0, 0);
-      return this.invertTransform().transformPoint(h, v /*, result */) as Point;
+      const result = MakePoint(0, 0);
+      return this.invertTransform().transformPoint(h, v , result) as Point;
     }
 
-    worldToDevice(x: number, y: number) {
-      //  const result = GEO.MakePoint();
-      return this.transform().transformPoint(x, y);
+    worldToDevice(x: number, y: number): Point {
+      const result = MakePoint(0, 0);
+      return this.transform().transformPoint(x, y, result) as Point;
     }
 
     pushTransform(transform: Matrix2D) {
@@ -281,5 +282,3 @@ namespace GEO {
   }
 
 } // namespace GEO
-
-

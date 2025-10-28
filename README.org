@@ -10,7 +10,7 @@
 
 - 親リポジトリ :: [[https://github.com/kenjirofukuda/gdsfeel-common][gdsfeel-common]]
 
-#+begin_src
+#+begin_example
 .
 ├── dist                   # <---- ignore
 │   ├── gds                # <---- gdsall.js で置き換えた。
@@ -44,9 +44,45 @@
 │   └── geometry
 │       └── geo.ts
 └── tsconfig.json
-#+end_src
+#+end_example
 
 * [TODO]
 ** TODO createjs.Matrix2D から DOMMatrix への変更
 
 - https://developer.mozilla.org/ja/docs/Web/API/DOMMatrix
+
+* コンパイル
+
+#+begin_src bash :results raw :dir (file-name-directory (buffer-file-name))
+npm run build
+#+end_src
+
+#+RESULTS:
+#+begin_example
+> build
+> run-s tsc fix
+
+
+> tsc
+> tsc -p .
+
+
+> fix
+> fix-esm-import-path dist/
+
+done.
+#+end_example
+
+
+** メンテナンススクリプト
+以下のスクリプトは製作者固有のディレクトリ構造なので実行しないこと
+
+#+caption: gdsfeel-phpへの実験転送
+#+begin_src bash :dir (file-name-directory (buffer-file-name))
+  src=./dist/gdsall.js
+  dst=~/Nextcloud/prove/php-room/gdsfeel-php/ts-dist/gdsall.js
+  cp "$src" "$dst"
+#+end_src
+
+
+#+RESULTS:
