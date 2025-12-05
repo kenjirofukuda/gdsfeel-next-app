@@ -10,9 +10,10 @@
     "skipLibCheck": true,
     "paths": {
       "createjs-module/*": ["./node_modules/createjs-modules/*"]
-    }
+    },
+    "composite": true
   },
   "include": ["src/**/*"],
   "exclude": ["src/gds/server", "node_modules"]
-
+  
 }
