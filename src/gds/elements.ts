@@ -1,13 +1,18 @@
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
+import * as GEO from '../geometry/geo';
+import { GObject, BUTT_END } from './gds';
+import {
+  Structure,
+  Library,
+} from './container';
 
-namespace GDS {
-
+// namespace GDS {
   export type CE = GEO.CE;
   export type Coords = GEO.Coords;
 
-  export class Element extends GObject {
+  export class GElement extends GObject {
     hash: any;
     _vertices: Coords | null;
     _dataExtent: GEO.Rectangle | null;
@@ -96,7 +101,7 @@ namespace GDS {
     }
   }
 
-  export class Sref extends Element {
+  export class Sref extends GElement {
     _transform: GEO.Matrix2D | null;
     _refStructure: Structure | null | undefined;
     constructor(hash: any) {
@@ -262,7 +267,7 @@ namespace GDS {
   }
 
 
-  export class Path extends GDS.Element {
+  export class Path extends GElement {
     _outlineCoords: Coords | null;
 
     constructor(jsonMap: any) {
@@ -296,11 +301,11 @@ namespace GDS {
   };
 
 
-  export class Boundary extends GDS.Element {
+  export class Boundary extends GElement {
   }
 
 
-  export class Text extends GDS.Element {
+  export class Text extends GElement {
     get string() {
       return this.hash.map['STRING'];
     }
@@ -327,7 +332,7 @@ namespace GDS {
   }
 
 
-  export class Point extends GDS.Element {
+  export class Point extends GElement {
 
     constructor(hash: any) {
       super(hash);
@@ -451,4 +456,4 @@ namespace GDS {
     return points as Coords;
   };
 
-}
+// } // GDS

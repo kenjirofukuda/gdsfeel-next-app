@@ -2,11 +2,26 @@
 /// <reference path="./gds.ts" />
 /// <reference path="./elements.ts" />
 
-namespace GDS {
+import * as GEO from '../geometry/geo';
+import { GObject } from './gds';
+import {
+  GElement,
+  Point,
+  Path,
+  Boundary,
+  Text,
+  Sref,
+  Aref,
+} from './elements';
+
+
+//import { GDS } from './gds';
+
+//namespace GDS {
 
   export class Structure extends GObject {
-    _elements: Array<Element>;
-    _dataExtent: GEO.Rectangle | null;
+    _elements: Array<GElement>;
+    _dataExtent?: GEO.Rectangle;
     hash: any;
 
     constructor() {
@@ -15,16 +30,16 @@ namespace GDS {
       this._dataExtent = null;
     }
 
-    get name() {
+    get name(): string {
       return this.hash.name;
     }
 
-    addElement(e: Element) {
-      this._elements.push(e);
+    addElement(e: GElement) {
       e.parent = this as GObject;
+      this._elements.push(e);
     };
 
-    elements(): Array<Element> {
+    elements(): Array<GElement> {
       return this._elements;
     }
 
@@ -39,8 +54,8 @@ namespace GDS {
       if (this.elements().length === 0) {
         return GEO.MakeRect(0, 0, 0, 0);
       }
-      let points: Coords = [];
-      this.elements().forEach(function (e: Element) {
+      let points: GEO.Coords = [];
+      this.elements().forEach(function (e: GElement) {
         const r = e.dataExtent();
         r.pointArray().forEach(function (p: GEO.Point) {
           points.push([p.x, p.y] as GEO.CE);
@@ -52,8 +67,8 @@ namespace GDS {
     loadFromJson(jsonMap: any) {
       this.hash = jsonMap;
       const self = this;
-      jsonMap.elements.forEach(function (oElement: Element) {
-        const element = Element.fromObject2(oElement);
+      jsonMap.elements.forEach(function (oElement: GElement) {
+        const element = GElement.fromObject2(oElement);
         if (element) {
           self.addElement(element);
         }
@@ -91,11 +106,11 @@ namespace GDS {
       this.hash = jsonMap;
       const self = this;
       Object.keys(jsonMap.structures).forEach(function (strucName) {
-        const struct = new GDS.Structure();
+        const struct = new Structure();
         struct.loadFromJson(jsonMap.structures[strucName]);
         self.addStructure(struct);
       });
     }
   }
 
-}
+//}

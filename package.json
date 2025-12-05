@@ -9,17 +9,22 @@
     "@types/node": "^24.8.1",
     "fix-esm-import-path": "^1.10.3",
     "npm-run-all": "^4.1.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^7.2.6"
   },
   "dependencies": {
     "@types/createjs": "^0.0.32",
-    "createjs": "^1.0.1"
+    "createjs": "^1.0.1",
+    "createjs-module": "^0.8.3",
+    "jquery": "^3.7.1"
   },
   "scripts": {
-    "build": "run-s tsc fix",
+    "build-onejs": "run-s tsc-onejs fix",
     "test": "run-s build js",
     "tsc": "tsc -p .",
-    "fix": "fix-esm-import-path dist/",
+    "tsc-onejs": "tsc -p tsconfig.onejs.json",
+    "tsc-module": "tsc -p tsconfig.module.json",
+    "fix": "fix-esm-import-path dist/onejs/",
     "js": "node dist/test"
   }
 }

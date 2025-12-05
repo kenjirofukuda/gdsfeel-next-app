@@ -1,4 +1,4 @@
-namespace GDS {
+//export namespace GDS {
 
   export const BUTT_END = 0;
   export const ROUND_END = 1;
@@ -25,4 +25,4 @@ namespace GDS {
       return obj;
     }
   }
-}
+//}

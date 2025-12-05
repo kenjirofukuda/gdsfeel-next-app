@@ -54,11 +54,12 @@
 * コンパイル
 
 #+begin_src bash :results raw :dir (file-name-directory (buffer-file-name))
-npm run build
+  npm install
+  npm run build
 #+end_src
 
-#+RESULTS:
 #+begin_example
+
 > build
 > run-s tsc fix
 
@@ -71,18 +72,28 @@ npm run build
 > fix-esm-import-path dist/
 
 done.
-#+end_example
 
+> build
+> run-s tsc fix
+
+#+end_example
 
 ** メンテナンススクリプト
 以下のスクリプトは製作者固有のディレクトリ構造なので実行しないこと
 
 #+caption: gdsfeel-phpへの実験転送
 #+begin_src bash :dir (file-name-directory (buffer-file-name))
-  src=./dist/gdsall.js
+  npm run tsc-onejs
+  src=./dist/onejs/gdsall.js
   dst=~/Nextcloud/prove/php-room/gdsfeel-php/ts-dist/gdsall.js
   cp "$src" "$dst"
 #+end_src
 
+#+caption: gdsfeel-php2への実験転送
+#+begin_src bash :dir (file-name-directory (buffer-file-name))
+  npm run tsc-onejs
+  src=./dist/onejs/gdsall.js
+  dst=~/Nextcloud/prove/php-room/gdsfeel-php2/public/gdsfeel.js
+  cp "$src" "$dst"
+#+end_src
 
-#+RESULTS:

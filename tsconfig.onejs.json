@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "noEmit": false,
+    "outDir": "./dist/onejs/",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "createjs-module/*": ["./node_modules/createjs-modules/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/gds/server", "node_modules"]
+
+}

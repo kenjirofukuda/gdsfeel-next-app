@@ -1,9 +1,29 @@
+"use browser";
 /// <reference path="../../geometry/geo.ts" />
 /// <reference path="../gds.ts" />
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />
 
-namespace GDS {
+import * as GEO from '../../geometry/geo';
+import { GObject } from '../gds';
+import {
+  GElement,
+  Point,
+  Path,
+  Boundary,
+  Text,
+  Sref,
+  Aref,
+} from '../elements';
+
+import {
+  Structure,
+  Library,
+} from '../container';
+
+import $ from 'jquery';
+
+//namespace GDS {
 
   export interface Canvas2D extends CanvasRenderingContext2D {
     _structureView: StructureView;
@@ -46,7 +66,7 @@ namespace GDS {
 
   const strokeSlantCross = strokeSlantCrossV2;
 
-  function strokePoints(ctx: Canvas2D, port: GEO.Viewport, points: Coords, closing: boolean = false) {
+  function strokePoints(ctx: Canvas2D, port: GEO.Viewport, points: GEO.Coords, closing: boolean = false) {
     ctx.beginPath();
     ctx.moveTo(points[0][0], points[0][1]);
     for (let ce of points.slice(1)) {
@@ -58,12 +78,12 @@ namespace GDS {
     ctx.stroke();
   }
 
-  export interface Element {
+  export interface GElementDraw extends GElement {
     drawOn(ctx: Canvas2D, port: GEO.Viewport): void;
   }
 
   // @virtual
-  (Element as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+  (GElement as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
     // subclass must be override
   };
 
@@ -299,9 +319,9 @@ namespace GDS {
       this.drawElements(ctx, port, structure.elements());
     }
 
-    drawElements(ctx: Canvas2D, port: GEO.Viewport, elements: Array<GDS.Element>): void {
-      elements.forEach(function (e: GDS.Element) {
-        e.drawOn(ctx, port);
+    drawElements(ctx: Canvas2D, port: GEO.Viewport, elements: Array<GElement>): void {
+      elements.forEach(function (e: GElement) {
+        (e as GElementDraw).drawOn(ctx, port);
       });
     }
 
@@ -328,4 +348,4 @@ namespace GDS {
 
   };
 
-}
+//} // GDS

@@ -1,4 +1,6 @@
-namespace GEO {
+import * as createjs from 'createjs-module';
+
+//export namespace GEO {
 
   type ViewportArgProc = (vp: Viewport) => void;
   type MatrixFunction = () => createjs.Matrix2D;
@@ -18,6 +20,8 @@ namespace GEO {
   }
 
   export class Point extends createjs.Point {
+    public x: number;
+    public y: number;
     constructor(x: number, y: number) {
       super(x, y);
     }
@@ -39,6 +43,15 @@ namespace GEO {
 
 
   export class Rectangle extends createjs.Rectangle {
+    public x: number;
+    public y: number;
+    public width: number;
+    public height: number
+
+    constructor(x?: number, y?: number, width?: number, height?: number) {
+      super(x, y, width, height);
+    }
+
     center(): Point {
       return new Point(
         this.x + this.width / 2.0,
@@ -281,4 +294,4 @@ namespace GEO {
     return new Point(x, y);
   }
 
-} // namespace GEO
+//} // namespace GEO

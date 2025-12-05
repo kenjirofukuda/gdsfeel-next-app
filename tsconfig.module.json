@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "types": ["node"],
+    "lib": ["ESNext"],
+    "noEmit": false,
+    "outDir": "./dist/module/",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "createjs-module/*": ["./node_modules/createjs-modules/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/gds/browser", "node_modules"]
+
+}
