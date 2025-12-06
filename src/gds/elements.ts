@@ -1,12 +1,13 @@
+import * as createjs from 'createjs-module';
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
-import * as GEO from '../geometry/geo';
-import { GObject, BUTT_END } from './gds';
+import * as GEO from '../geometry/geo.js';
+import { GObject, BUTT_END } from './gds.js';
 import {
   Structure,
   Library,
-} from './container';
+} from './container.js';
 
 export type CE = GEO.CE;
 export type Coords = GEO.Coords;

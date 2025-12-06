@@ -4,8 +4,8 @@
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />
 
-import * as GEO from '../../geometry/geo';
-import { GObject } from '../gds';
+import * as GEO from '../../geometry/geo.js';
+import { GObject } from '../gds.js';
 import {
   GElement,
   Point,
@@ -14,12 +14,12 @@ import {
   Text,
   Sref,
   Aref,
-} from '../elements';
+} from '../elements.js';
 
 import {
   Structure,
   Library,
-} from '../container';
+} from '../container.js';
 
 import $ from 'jquery';
 

@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 
-import { Library, Structure } from '/dist/onejs/gds/container.js';
-import { StructureView } from '/dist/onejs/gds/browser/canvas.js';
+import { Library, Structure } from '/dist/onejs/src/gds/container.js';
+import { StructureView } from '/dist/onejs/src/gds/browser/canvas.js';
 
 let gLibrary = null;
 let gStructure = null;

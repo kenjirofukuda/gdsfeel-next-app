@@ -1,5 +1,9 @@
 {
-  
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "node16",
+    "moduleResolution": "node16"
+  },
   "references": [
     { "path": "./tsconfig.onejs.json" },
     { "path": "./tsconfig.module.json" }

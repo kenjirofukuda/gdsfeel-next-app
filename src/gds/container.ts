@@ -2,8 +2,8 @@
 /// <reference path="./gds.ts" />
 /// <reference path="./elements.ts" />
 
-import * as GEO from '../geometry/geo';
-import { GObject } from './gds';
+import * as GEO from '../geometry/geo.js';
+import { GObject } from './gds.js';
 import {
   GElement,
   Point,
@@ -12,7 +12,7 @@ import {
   Text,
   Sref,
   Aref,
-} from './elements';
+} from './elements.js';
 
 
 export class Structure extends GObject {

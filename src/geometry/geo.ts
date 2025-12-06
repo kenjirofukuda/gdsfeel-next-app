@@ -18,8 +18,8 @@ export function MakeMatrix(): Matrix2D {
 }
 
 export class Point extends createjs.Point {
-  public x: number;
-  public y: number;
+  //public x: number;
+  //public y: number;
   constructor(x: number, y: number) {
     super(x, y);
   }
@@ -41,10 +41,10 @@ export type Coords = Array<CE>;
 
 
 export class Rectangle extends createjs.Rectangle {
-  public x: number;
-  public y: number;
-  public width: number;
-  public height: number
+  //public x: number;
+  //public y: number;
+  //public width: number;
+  //public height: number
 
   constructor(x?: number, y?: number, width?: number, height?: number) {
     super(x, y, width, height);
@@ -291,4 +291,3 @@ export function MakeRect(x: number, y: number, width: number, height: number): R
 export function MakePoint(x: number, y: number): Point {
   return new Point(x, y);
 }
-

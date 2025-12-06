@@ -13,8 +13,6 @@
     "vite": "^7.2.6"
   },
   "dependencies": {
-    "@types/createjs": "^0.0.32",
-    "createjs": "^1.0.1",
     "createjs-module": "^0.8.3",
     "jquery": "^3.7.1"
   },
