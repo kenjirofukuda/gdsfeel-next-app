@@ -98,6 +98,10 @@ export class Library extends GObject {
     return this._structures;
   }
 
+  structureNames(): Array<string> {
+    return this.structures().map((each) => each.name);
+  }
+
   loadFromJson(jsonMap: any): void {
     this.hash = jsonMap;
     const self = this;
@@ -108,5 +112,3 @@ export class Library extends GObject {
     });
   }
 }
-
-

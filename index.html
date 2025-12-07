@@ -4,6 +4,9 @@
     <title>Hage</title>
     <link rel="stylesheet" href="/styles2.css">
 
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -15,8 +18,10 @@
     <script type="module" src="./dist/onejs/src/gds/elements.js"></script>
     <script type="module" src="./dist/onejs/src/gds/browser/canvas.js"></script>
     <script src="./lib_data.js"></script>
-    <script type="module" src="./canvas.js"></script>
+    <script type="module" src="./html-canvas.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <script type="text/jsx" src="./struc-list.jsx"></script>
   </head>
   <body onload="loadIt()">
     <div id="container" class="box max-h-full">
@@ -26,6 +31,8 @@
         </div>
       </div>
       <div id="row2" class="content row flex">
+        <div id="struc-list" class="border border-gray400 flex vscroll">
+        </div>
         <div id="box-right" class="flex">
           <div>
             <code>
@@ -38,10 +45,13 @@
           <div class="flex: 0 1 auto; width: 100%">
             zoom :
             <button value="0.5" onclick="gStructureView.zoomHalf()" >
+              0.5
             </button>
             <button value="2.0" onclick="gStructureView.zoomDouble()" >
+              2.0
             </button>
             <button value="Fit" onclick="gStructureView.fit()" >
+              Fit
             </button>
           </div>
 

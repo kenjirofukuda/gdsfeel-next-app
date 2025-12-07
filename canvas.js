@@ -98,4 +98,6 @@ Number.prototype.roundDigits = function (dig) {
   return floatConvertSyncer(this, dig);
 };
 
+
+//window.gStructureView = gStructureView;
 window.loadIt = loadIt;
