@@ -1,3 +1,5 @@
+import InfoBar from './info-bar';
+import ViewCommands from './view-commands';
 
 function Header({ title }) {
   return <h1>{title ? title : 'Default title'}</h1>;
@@ -16,10 +18,8 @@ export default function HomePage() {
           elment list
         </div>
         <div id="box-right" className="flex">
-          <div id="info-bar">
-          </div>
-          <div id="view-buttons" className="flex: 0 1 auto; width: 100%">
-          </div>
+          <InfoBar />
+          <ViewCommands />
           <div id="canvas-wrapper" className="bg-sky-50">
             <canvas id="canvas"></canvas>
           </div>
