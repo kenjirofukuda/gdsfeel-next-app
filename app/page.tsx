@@ -9,12 +9,11 @@ export default function HomePage(props) {
       </div>
       <div id="row2" className="content row flex">
         <div id="struc-list" className="border border-gray400 flex vscroll">
-          struct list
-        </div>
-        <div id="element-list" className="visible border border-gray400 flex vscroll">
           {/*  https://zenn.dev/ampersand/articles/759a7ff03f085a */ }
           {/* @ts-expect-error Server Component */}
           <ExampleList />
+        </div>
+        <div id="element-list" className="visible border border-gray400 flex vscroll">
         </div>
         <div id="box-right" className="flex">
           <InfoBar />

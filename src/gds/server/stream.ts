@@ -1,4 +1,4 @@
-//"use server";
+// "use server";
 /// <reference path="../../geometry/geo.ts" />
 /// <reference path="../gds.ts" />
 /// <reference path="../elements.ts" />
@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 
 import { Library, Structure } from '@/src/gds/container';
-import { Text, Boundary, Path, Sref, Aref } from '@/src/gds/elements';
+import { GElement, Text, Boundary, Path, Sref, Aref } from '@/src/gds/elements';
 
 // DATA TYPE
 const NO_DATA   = 0;
@@ -238,6 +238,10 @@ export class Inform {
 
   get gdsPath(): string {
     return this._gdsPath;
+  }
+
+  get library(): Library {
+    return this._library;
   }
 
   async run(): Promise<void> {

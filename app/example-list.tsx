@@ -6,13 +6,11 @@ import { Inform } from '@/src/gds/server/stream';
 
 export default async function ExampleList() {
   const inform = new Inform();
-  const contents = inform.exampleList();
   inform.gdsPath = path.join(process.cwd(), 'seedgds', 'test.gds');
-  console.log(inform);
+  // console.log(inform);
   await inform.run();
+  const contents = inform.library.structureNames();
   return (
-    <ul>
-      { contents.map((each) => <li key={each}>{ each }</li> ) }
-    </ul>
+    contents.map((each: string) => <a key={each}>{ each }</a> )
   );
 }
