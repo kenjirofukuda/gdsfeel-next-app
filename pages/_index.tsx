@@ -1,19 +1,25 @@
 import InfoBar from './info-bar';
-//import ViewCommands from './view-commands';
+import ViewCommands from './view-commands';
 import ExampleList from './example-list';
 import { Inform } from '@/src/gds/server/stream';
 import { Library } from '@/src/gds/container';
 import path from 'node:path';
 
-async function getLibrary(): Promise<Library> {
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+
+export const getServerSideProps = (async () => {
   const inform = new Inform();
   inform.gdsPath = path.join(process.cwd(), 'seedgds', 'test.gds');
+  // console.log(inform);
   await inform.run();
-  return inform.library;
-}
+  const library = inform.library;
+  return { props: { library } }
+}) satisfies GetServerSideProps<{ library: Library }>
 
-export default async function Page() {
-  const library = await getLibrary();
+
+export default function Page({
+  library,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div id="container" className="box max-h-full">
       <div id="row1" className="header row">
@@ -21,7 +27,7 @@ export default async function Page() {
       <div id="row2" className="content row flex">
         <div id="struc-list" className="border border-gray400 flex vscroll">
           {/*  https://zenn.dev/ampersand/articles/759a7ff03f085a */ }
-          { /* @ts-expect-error Server Component */ }
+          {/* @ts-expect-error Server Component */}
           <ExampleList library={ library } />
         </div>
         <div id="element-list" className="visible border border-gray400 flex vscroll">
