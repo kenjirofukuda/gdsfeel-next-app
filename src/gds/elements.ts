@@ -1,13 +1,13 @@
-import * as createjs from 'createjs-module';
+// import * as createjs from 'createjs-module';
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
-import * as GEO from '../geometry/geo.js';
-import { GObject, BUTT_END } from './gds.js';
+import * as GEO from '@/src/geometry/geo';
+import { GObject, BUTT_END } from '@/src/gds/gds';
 import {
   Structure,
   Library,
-} from './container.js';
+} from '@/src/gds/container';
 
 export type CE = GEO.CE;
 export type Coords = GEO.Coords;
@@ -455,4 +455,3 @@ function pathOutlineCoords(coords: Coords, pathType: number, width: number): Coo
   }
   return points as Coords;
 };
-

@@ -2,8 +2,8 @@
 /// <reference path="./gds.ts" />
 /// <reference path="./elements.ts" />
 
-import * as GEO from '../geometry/geo.js';
-import { GObject } from './gds.js';
+import * as GEO from '@/src/geometry/geo';
+import { GObject } from '@/src/gds/gds';
 import {
   GElement,
   Point,
@@ -12,7 +12,7 @@ import {
   Text,
   Sref,
   Aref,
-} from './elements.js';
+} from '@/src/gds/elements';
 
 
 export class Structure extends GObject {
@@ -24,6 +24,7 @@ export class Structure extends GObject {
     super();
     this._elements = [];
     this._dataExtent = null;
+    this.hash = {};
   }
 
   get name(): string {
@@ -77,11 +78,17 @@ export class Structure extends GObject {
 export class Library extends GObject {
   _structures: Array<Structure>;
   _structureMap: Map<string, Structure>;
+  _units: [number, number];
+  _bgnlib: Array<number>;
+  _name: string;
   hash: any;
   constructor() {
     super();
     this._structures = [];
     this._structureMap = new Map<string, Structure>;
+    this._units = [0, 0];
+    this._bgnlib = [];
+    this._name = '';
   }
 
   addStructure(struct: Structure) {

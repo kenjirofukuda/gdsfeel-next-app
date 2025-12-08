@@ -1,9 +1,14 @@
-import * as createjs from 'createjs-module';
+
+// can't import createjs in typescript environment
+// import * as createjs from 'createjs-module';
+import { Point }     from '@/src/geometry/Point';
+import { Rectangle } from '@/src/geometry/Rectangle';
+import { Matrix2D }  from '@/src/geometry/Matrix2D';
 
 type ViewportArgProc = (vp: Viewport) => void;
-type MatrixFunction = () => createjs.Matrix2D;
+type MatrixFunction = () => Matrix2D;
 type WheelDirection = 1 | -1;
-export type Matrix2D = createjs.Matrix2D;
+// export type Matrix2D = createjs.Matrix2D;
 
 export const EPS = 1e-8;
 export const PI_HALF = 0.5 * Math.PI;
@@ -14,24 +19,25 @@ export function sameValue(v1: number, v2: number, eps = EPS) {
 }
 
 export function MakeMatrix(): Matrix2D {
-  return new createjs.Matrix2D();
+  return new Matrix2D();
 }
 
-export class Point extends createjs.Point {
-  //public x: number;
-  //public y: number;
-  constructor(x: number, y: number) {
-    super(x, y);
-  }
+// export class Point extends createjs.Point {
+//   //public x: number;
+//   //public y: number;
+//   constructor(x: number, y: number) {
+//     super(x, y);
+//   }
 
-  equals(other: Point): boolean {
-    return this.x === other.x && this.y === other.y;
-  }
+//   equals(other: Point): boolean {
+//     return this.x === other.x && this.y === other.y;
+//   }
 
-  minus(other: Point): Point {
-    return new Point(this.x - other.x, this.y - other.y);
-  }
-}
+//   minus(other: Point): Point {
+//     return new Point(this.x - other.x, this.y - other.y);
+//   }
+// }
+
 
 type dimensionIndex = 0 | 1 | 2; // x, y, z
 export type IndexedPoint = Array<dimensionIndex>;
@@ -40,31 +46,31 @@ export type CE = IndexedPoint;
 export type Coords = Array<CE>;
 
 
-export class Rectangle extends createjs.Rectangle {
-  //public x: number;
-  //public y: number;
-  //public width: number;
-  //public height: number
+// export class Rectangle extends createjs.Rectangle {
+//   //public x: number;
+//   //public y: number;
+//   //public width: number;
+//   //public height: number
 
-  constructor(x?: number, y?: number, width?: number, height?: number) {
-    super(x, y, width, height);
-  }
+//   constructor(x?: number, y?: number, width?: number, height?: number) {
+//     super(x, y, width, height);
+//   }
 
-  center(): Point {
-    return new Point(
-      this.x + this.width / 2.0,
-      this.y + this.height / 2.0);
-  };
+//   center(): Point {
+//     return new Point(
+//       this.x + this.width / 2.0,
+//       this.y + this.height / 2.0);
+//   };
 
-  pointArray(): Point[] {
-    const points = [];
-    points.push(new Point(this.x, this.y));
-    points.push(new Point(this.x, this.y + this.height));
-    points.push(new Point(this.x + this.width, this.y + this.height));
-    points.push(new Point(this.x + this.width, this.y));
-    return points;
-  };
-}
+//   pointArray(): Point[] {
+//     const points = [];
+//     points.push(new Point(this.x, this.y));
+//     points.push(new Point(this.x, this.y + this.height));
+//     points.push(new Point(this.x + this.width, this.y + this.height));
+//     points.push(new Point(this.x + this.width, this.y));
+//     return points;
+//   };
+// }
 
 
 export class Viewport {
@@ -186,7 +192,7 @@ export class Viewport {
 
   popTransform(): Matrix2D | null | any {
     if (this.transformStack.length === 0) {
-      return new createjs.Matrix2D();
+      return new Matrix2D();
     }
     const result: any = this.transformStack.pop();
     this._damageTransform();
@@ -194,7 +200,7 @@ export class Viewport {
   }
 
   _lookupTransform(): Matrix2D {
-    const newTransform = new createjs.Matrix2D();
+    const newTransform = new Matrix2D();
     newTransform.prependMatrix(this.basicTransform());
     this.transformStack.map(function (item) {
       newTransform.prependMatrix(item);
@@ -210,7 +216,7 @@ export class Viewport {
   }
 
   _lookupBasicTransform(): Matrix2D {
-    const tx = new createjs.Matrix2D();
+    const tx = new Matrix2D();
     tx.translate(this.portCenterX, this.height - this.portCenterY);
     tx.scale(this.scale, -this.scale);
     tx.translate(-this.centerX, -this.centerY);

@@ -1,11 +1,8 @@
 import InfoBar from './info-bar';
 import ViewCommands from './view-commands';
+import ExampleList from './example-list';
 
-function Header({ title }) {
-  return <h1>{title ? title : 'Default title'}</h1>;
-}
-
-export default function HomePage() {
+export default function HomePage(props) {
   return (
     <div id="container" className="box max-h-full">
       <div id="row1" className="header row">
@@ -15,11 +12,13 @@ export default function HomePage() {
           struct list
         </div>
         <div id="element-list" className="visible border border-gray400 flex vscroll">
-          elment list
+          {/*  https://zenn.dev/ampersand/articles/759a7ff03f085a */ }
+          {/* @ts-expect-error Server Component */}
+          <ExampleList />
         </div>
         <div id="box-right" className="flex">
           <InfoBar />
-          <ViewCommands />
+
           <div id="canvas-wrapper" className="bg-sky-50">
             <canvas id="canvas"></canvas>
           </div>
