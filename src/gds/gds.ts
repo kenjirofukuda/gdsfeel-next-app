@@ -4,16 +4,26 @@ export const EXTENDED_END = 2;
 export const CUSTOMPLUS_END = 4;
 
 export class GObject {
-  parent: GObject | null;
+  public parent: GObject | undefined;
+  sfAttr: Map<string, any>;
 
   constructor() {
-    this.parent = null;
+    this.parent = undefined;
+    this.sfAttr = new Map();
+  }
+
+  forgetParent() {
+    this.parent = undefined;
+  }
+
+  recordParent() {
+    // subclass mutst be implement
   }
 
   root(): GObject {
     let obj: GObject = this;
     while (true) {
-      if (obj.parent === null) {
+      if (obj.parent === undefined) {
         break;
       }
       else {

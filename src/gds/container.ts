@@ -23,12 +23,24 @@ export class Structure extends GObject {
   constructor() {
     super();
     this._elements = [];
-    this._dataExtent = null;
+    this._dataExtent = undefined;
     this.hash = {};
   }
 
+  forgetParent() {
+    this.elements().forEach ((each) => {each.forgetParent()});
+    super.forgetParent();
+    this._dataExtent = undefined;
+  }
+
+  recordParent() {
+    this.elements().forEach ((each) => {
+      each.parent = this as GObject;
+    });
+  }
+
   get name(): string {
-    return this.hash.name;
+    return this.sfAttr['STRNAME']
   }
 
   addElement(e: GElement) {
@@ -61,7 +73,8 @@ export class Structure extends GObject {
     return GEO.calcExtentBounds(points);
   }
 
-  loadFromJson(jsonMap: any) {
+  // PHP serialized JSON version
+  loadFromPhpJson(jsonMap: any) {
     this.hash = jsonMap;
     const self = this;
     jsonMap.elements.forEach(function (oElement: GElement) {
@@ -78,17 +91,31 @@ export class Structure extends GObject {
 export class Library extends GObject {
   _structures: Array<Structure>;
   _structureMap: Map<string, Structure>;
-  _units: [number, number];
-  _bgnlib: Array<number>;
-  _name: string;
+  // _units: [number, number];
+  // _bgnlib: Array<number>;
+  // _name: string;
   hash: any;
+
   constructor() {
     super();
     this._structures = [];
     this._structureMap = new Map<string, Structure>;
-    this._units = [0, 0];
-    this._bgnlib = [];
-    this._name = '';
+    // this._units = [0, 0];
+    // this._bgnlib = [];
+    // this._name = '';
+  }
+
+  forgetParent() {
+    this.structures().forEach ((each) => {each.forgetParent()});
+    super.forgetParent();
+    this._structureMap = new Map<string, Structure>;
+  }
+
+  recordParent() {
+    this.structures().forEach ((each) => {
+      each.parent = this as GObject;
+      each.recordParent();
+    });
   }
 
   addStructure(struct: Structure) {
@@ -109,13 +136,39 @@ export class Library extends GObject {
     return this.structures().map((each) => each.name);
   }
 
-  loadFromJson(jsonMap: any): void {
+  // PHP serialized JSON version
+  loadFromPhpJson(jsonMap: any): void {
     this.hash = jsonMap;
     const self = this;
     Object.keys(jsonMap.structures).forEach(function (strucName) {
       const struct = new Structure();
-      struct.loadFromJson(jsonMap.structures[strucName]);
+      struct.loadFromPhpJson(jsonMap.structures[strucName]);
       self.addStructure(struct);
     });
   }
+
+  stringify(): string {
+    this.forgetParent();
+    const result = JSON.stringify(this);
+    this.recordParent();
+    return result;
+  }
+
 }
+
+export class Station {
+  library: Library | undefined;
+  structure: Structure | undefined;
+  element: GElement | undefined;
+
+  constructor() {
+    this.library = undefined;
+    this.structure = undefined;
+    this.element = undefined;
+  }
+}
+
+export type StationProps = {
+  library: object;
+  structureName: string;
+};

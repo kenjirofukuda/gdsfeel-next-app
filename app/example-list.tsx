@@ -1,21 +1,27 @@
-'use server';
+'use client';
 
-import fs from 'node:fs';
-// import path from 'node:path';
-// import { Inform } from '@/src/gds/server/stream';
-import { Library } from '@/src/gds/container';
+import { useState } from 'react';
 
-type LibraryProps = {
-  library: Library;
-};
 
-export default async function ExampleList( { library }: LibraryProps ) {
-  // const inform = new Inform();
-  // inform.gdsPath = path.join(process.cwd(), 'seedgds', 'test.gds');
-  // console.log(inform);
-  // await inform.run();
-  const contents = /* inform. */ library.structureNames();
+import { Library, StationProps } from '@/src/gds/container';
+import  StructureItem  from './structure-item';
+
+
+export default function ExampleList( { station }: StationProps ) {
+  console.log({a: station});
+  const [ structureName, setStructureName ] = useState("");
+
+  const selectStructure = (e) =>  {
+    console.log({e: e.target.innerText});
+    station.structureName = e.target.innerText;
+    setStructureName(station.structureName);
+  };
+
+  //  const contents = station?.library?.structureNames() || [];
+  const contents = station.library._structures.map((s: object) => s.sfAttr.STRNAME);
   return (
-    contents.map((each: string) => <a key={each}>{ each }</a> )
+    contents.map((each: string) =>
+      <StructureItem name={each} station={ station } onClick={selectStructure} />
+    )
   );
 }

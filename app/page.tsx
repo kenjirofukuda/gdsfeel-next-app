@@ -2,7 +2,7 @@ import InfoBar from './info-bar';
 //import ViewCommands from './view-commands';
 import ExampleList from './example-list';
 import { Inform } from '@/src/gds/server/stream';
-import { Library } from '@/src/gds/container';
+import { Library, StationProps } from '@/src/gds/container';
 import path from 'node:path';
 
 async function getLibrary(): Promise<Library> {
@@ -14,6 +14,15 @@ async function getLibrary(): Promise<Library> {
 
 export default async function Page() {
   const library = await getLibrary();
+  const strLibrary = library.stringify();
+  //  console.log(strLibrary);
+  const objLibrary = JSON.parse(strLibrary);
+  console.log(objLibrary);
+  const station: StationProps = {
+    library: objLibrary,
+    structureName: ""
+  };
+
   return (
     <div id="container" className="box max-h-full">
       <div id="row1" className="header row">
@@ -22,7 +31,7 @@ export default async function Page() {
         <div id="struc-list" className="border border-gray400 flex vscroll">
           {/*  https://zenn.dev/ampersand/articles/759a7ff03f085a */ }
           { /* @ts-expect-error Server Component */ }
-          <ExampleList library={ library } />
+          <ExampleList station={ station } />
         </div>
         <div id="element-list" className="visible border border-gray400 flex vscroll">
         </div>

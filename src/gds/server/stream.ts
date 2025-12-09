@@ -303,21 +303,19 @@ export class Inform {
     }
     switch (rType) {
       case BGNLIB:
-        this._library = new Library();
-        this._library._bgnlib = decoded[INT2];
-        break;
       case UNITS:
-        this._library._units = decoded[REAL8];
-        break;
       case LIBNAME:
-        this._library._name = decoded[ASCII];
+        if (rType == BGNLIB) {
+          this._library = new Library();
+        }
+        this._library.sfAttr[recordSymbol(rType)] = decoded[dType];
         break;
       case BGNSTR:
-        this._structure = new Structure();
-        break;
       case STRNAME:
-        this._structure && (this._structure.hash.name = decoded[ASCII]);
-
+        if (rType == BGNSTR) {
+          this._structure = new Structure();
+        }
+        this._structure.sfAttr[recordSymbol(rType)] = decoded[dType];
         break;
       case ENDSTR:
         if (this._structure) {
@@ -325,25 +323,16 @@ export class Inform {
           this._structure = undefined;
         }
         break;
+
       case BOUNDARY:
-        this._element = new Boundary({type: rType});
-        break;
       case PATH:
-        this._element = new Path({type: rType});
-        break;
       case SREF:
-        this._element = new Sref({type: rType});
-        break;
       case AREF:
-        this._element = new Aref({type: rType});
-        break;
       case TEXT:
-        this._element = new Text({type: rType});
+        this._element = GElement.fromType(rType);
         break;
 
       case ELKEY:
-        this._element.hash.elkey = decoded[INT4];
-        break;
       case XY:
       case LAYER:
       case ELFLAGS:
@@ -364,7 +353,7 @@ export class Inform {
       case PROPATTR:
       case PROPVALUE:
       case SNAME:
-        this._element.hash[recordSymbol(rType)] = decoded[dType];
+        this._element.sfAttr[recordSymbol(rType)] = decoded[dType];
         break;
 
       case ENDEL:

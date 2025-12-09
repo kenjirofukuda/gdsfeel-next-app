@@ -14,14 +14,20 @@ export type Coords = GEO.Coords;
 
 export class GElement extends GObject {
   hash: any;
-  _vertices: Coords | null;
-  _dataExtent: GEO.Rectangle | null;
+  _vertices: Coords | undefined;
+  _dataExtent: GEO.Rectangle | undefined;
 
   constructor(jsonMap: object) {
     super();
-    this._vertices = null;
-    this._dataExtent = null;
+    this._vertices = undefined;
+    this._dataExtent = undefined;
     this.hash = jsonMap;
+  }
+
+  forgetParent() {
+    super.forgetParent();
+    this._vertices = undefined;
+    this._dataExtent = undefined;
   }
 
   get x(): number {
@@ -55,7 +61,7 @@ export class GElement extends GObject {
   }
 
   _lookupVertices(): Coords {
-    let values = this.hash.map.XY;
+    let values = this.sfAttr.XY;
     let result: Coords = [];
     for (let i = 0; i < values.length / 2; i++) {
       let x = values[i * 2 + 0] * 0.001;
@@ -66,76 +72,88 @@ export class GElement extends GObject {
   }
 
   get datatype(): number {
-    return this.hash.map['DATATYPE'] || 0;
+    return this.sfAttr['DATATYPE'] || 0;
   }
 
   get layer(): number {
-    return this.hash.map['LAYER'] || 0;
+    return this.sfAttr['LAYER'] || 0;
   }
 
   attrOn(stream: any): void {
     stream['vertices'] = this.vertices();
-    stream['elkey'] = this.hash.elkey;
+    stream['elkey'] = this.sfAttr['ELKEY'];
     stream['datatype'] = this.datatype;
     stream['layer'] = this.layer;
     stream['dataExtent'] = this.dataExtent();
   }
 
   static fromObject2(hash: any) {
-    if (hash.type === 9) { // PATH
+    return this.fromType(hash.type);
+  }
+
+  static fromType(type: number) {
+    const hash = {type: type};
+    if (type === 9) { // PATH
       return new Path(hash);
     }
-    if (hash.type === 12) { // TEXT
+    if (type === 12) { // TEXT
       return new Text(hash);
     }
-    if (hash.type === 8) { // BOUNDARY
+    if (type === 8) { // BOUNDARY
       return new Boundary(hash);
     }
-    if (hash.type === 10) { // SREF
+    if (type === 10) { // SREF
       return new Sref(hash);
     }
-    if (hash.type === 11) { // AREF
+    if (type === 11) { // AREF
       return new Aref(hash);
     }
-    return null;
+    return undefined;
   }
+
 }
 
 export class Sref extends GElement {
-  _transform: GEO.Matrix2D | null;
-  _refStructure: Structure | null | undefined;
+  _transform: GEO.Matrix2D | undefined;
+  _refStructure: Structure | undefined;
   constructor(hash: any) {
     super(hash);
-    this._refStructure = null;
-    this._transform = null;
+    this._refStructure = undefined;
+    this._transform = undefined;
+  }
+
+  forgetParent() {
+    super.forgetParent();
+    this._refStructure = undefined;
+    this._transform = undefined;
   }
 
   get refName(): string {
-    return this.hash.map['SNAME'];
+    return this.sfAttr['SNAME'];
   }
 
   get reflected(): boolean {
-    return (this.hash.map['STRANS'] & 0x8000) != 0;
+    return (this.sfAttr['STRANS'] & 0x8000) != 0;
   }
 
   get angleAbsolute(): boolean {
-    return (this.hash.map['STRANS'] & 0x8001) != 0;
+    return (this.sfAttr['STRANS'] & 0x8001) != 0;
   }
 
   get magAbsolute(): boolean {
-    return (this.hash.map['STRANS'] & 0x8002) != 0;
+    return (this.sfAttr['STRANS'] & 0x8002) != 0;
   }
 
   get angleDegress(): number {
-    return this.hash.map['ANGLE'] || 0.0;
+    return this.sfAttr['ANGLE'] || 0.0;
   }
 
   get magnify(): number {
-    return this.hash.map['MAG'] || 1.0;
+    return this.sfAttr['MAG'] || 1.0;
   }
 
   get refStructure(): Structure | undefined {
-    if (this._refStructure === null) {
+    if (this._refStructure === undefined) {
       this._refStructure = (this.root() as Library).structureNamed(this.refName);
     }
     return this._refStructure;
@@ -191,15 +209,22 @@ export class Sref extends GElement {
 }
 
 export class Aref extends Sref {
-  _rowStep: number | null;
-  _colStep: number | null;
-  _repeatedTransforms: GEO.Matrix2D[] | null;
+  _rowStep: number | undefined;
+  _colStep: number | undefined;
+  _repeatedTransforms: GEO.Matrix2D[] | undefined;
 
   constructor(hash: any) {
     super(hash);
-    this._rowStep = null;
-    this._colStep = null;
-    this._repeatedTransforms = null;
+    this._rowStep = undefined;
+    this._colStep = undefined;
+    this._repeatedTransforms = undefined;
+  }
+
+  forgetParent() {
+    super.forgetParent();
+    this._rowStep = undefined;
+    this._colStep = undefined;
+    this._repeatedTransforms = undefined;
   }
 
   attrOn(stream: any): void {
@@ -212,11 +237,11 @@ export class Aref extends Sref {
   }
 
   get cols(): number {
-    return (this.hash.map['COLROW'])[0];
+    return (this.sfAttr['COLROW'])[0];
   }
 
   get rows(): number {
-    return (this.hash.map['COLROW'])[1];
+    return (this.sfAttr['COLROW'])[1];
   }
 
   get colStep(): number {
@@ -268,19 +293,24 @@ export class Aref extends Sref {
 
 
 export class Path extends GElement {
-  _outlineCoords: Coords | null;
+  _outlineCoords: Coords | undefined;
 
   constructor(jsonMap: any) {
     super(jsonMap);
-    this._outlineCoords = null;
+    this._outlineCoords = undefined;
+  }
+
+  forgetParent() {
+    super.forgetParent();
+    this._outlineCoords = undefined;
   }
 
   get pathtype(): number {
-    return this.hash.map['PATHTYPE'];
+    return this.sfAttr['PATHTYPE'];
   }
 
   get width(): number {
-    return this.hash.map['WIDTH'] * 0.001;
+    return this.sfAttr['WIDTH'] * 0.001;
   }
 
   attrOn(stream: any): void {
@@ -307,19 +337,19 @@ export class Boundary extends GElement {
 
 export class Text extends GElement {
   get string() {
-    return this.hash.map['STRING'];
+    return this.sfAttr['STRING'];
   }
 
   get texttype() {
-    return this.hash.map['TEXTTYPE'] || 0;
+    return this.sfAttr['TEXTTYPE'] || 0;
   }
 
   get presentation() {
-    return this.hash.map['PRESENTATION'] || 0;
+    return this.sfAttr['PRESENTATION'] || 0;
   }
 
   get magnify() {
-    return this.hash.map['MAG'] || 0;
+    return this.sfAttr['MAG'] || 0;
   }
 
   attrOn(stream: any) {

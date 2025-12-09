@@ -5,14 +5,14 @@ html,body {
   margin: 0;
 }
 
-a, a:visited {
-  text-decoration: none;
-  color: black;
-}
+/* a, a:visited { */
+/*   text-decoration: none; */
+/*   color: black; */
+/* } */
 
-a.selected {
-  color: white;
-}
+/* a.selected { */
+/*   color: white; */
+/* } */
 
 
 li {
