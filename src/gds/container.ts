@@ -19,12 +19,13 @@ export class Structure extends GObject {
   _elements: Array<GElement>;
   _dataExtent?: GEO.Rectangle;
   hash: any;
-
+  _idSeed: number;
   constructor() {
     super();
     this._elements = [];
     this._dataExtent = undefined;
     this.hash = {};
+    this._idSeed = 0;
   }
 
   forgetParent() {
@@ -44,6 +45,12 @@ export class Structure extends GObject {
   }
 
   addElement(e: GElement) {
+    this._idSeed++;
+    let elkey = this._idSeed;
+    if (e.sfAttr.ELKEY) {
+      elkey = e.sfAttr.ELKEY;
+    }
+    e.sfAttr.ELKEY = elkey;
     e.parent = this as GObject;
     this._elements.push(e);
   };

@@ -30,6 +30,10 @@ export class GElement extends GObject {
     this._dataExtent = undefined;
   }
 
+  get elkey(): number {
+    return this.sfAttr.ELKEY || -1;
+  }
+
   get x(): number {
     return this.vertices()[0][0];
   }
@@ -189,7 +193,7 @@ export class Sref extends GElement {
   }
 
   _lookupTransform2(): GEO.Matrix2D {
-    const rtx = new createjs.Matrix2D();
+    const rtx = new Matrix2D();
     const rad = this.angleDegress * Math.PI / 180;
     const radCos = Math.cos(rad);
     const radSin = Math.sin(rad);
@@ -280,7 +284,7 @@ export class Aref extends Sref {
     let result = [];
     for (let ix = 0; ix < this.cols; ix++) {
       for (let iy = 0; iy < this.rows; iy++) {
-        const otx = new createjs.Matrix2D();
+        const otx = new Matrix2D();
         otx.translate(ix * this.colStep, iy * this.rowStep);
         otx.prependMatrix(this.transform());
         result.push(otx);

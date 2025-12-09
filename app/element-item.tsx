@@ -1,10 +1,11 @@
 //'use client';
 
 import type { StationProps } from '@/src/gds/container';
+import { kMaxLength } from 'buffer';
 import { MouseEventHandler } from 'react';
 
-type StructureItemProps =  {
-  name: string;
+type ElementItemProps =  {
+  gelement: object;
   station: StationProps;
   onClick: MouseEventHandler<HTMLAnchorElement>;
 };
@@ -12,16 +13,15 @@ type StructureItemProps =  {
 const classActive = 'bg-blue-900 text-white visited:text-white';
 const classInactive = 'text-gray-800 hover:bg-gray-200 hover:text-black';
 
-
-export default function StructureItem ({name, station, onClick }: StructureItemProps) {
-  const selected = station.structureName == name;
+export default function ElementItem ({gelement, station, onClick }: ElementItemProps) {
+  const selected = false;
   const attr = selected ? classActive : classInactive;
   return (
     <div>
       <a
         className={attr}
         onClick={onClick} >
-        { name }
+        { 'ELEM: (' + gelement.sfAttr.ELKEY + ')' }
       </a>
     </div>
   );
