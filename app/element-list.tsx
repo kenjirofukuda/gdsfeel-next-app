@@ -24,11 +24,9 @@ export default function ElementList( { station }: StationProps ) {
 
   const contents = struct?._elements || [];
   return (
-    <div>
-    {contents.map((each: any, index) => {
+contents.map((each: any, index) => {
       const key = each.sfAttr.ELKEY || index;
       return <ElementItem key={key} gelement={each} station={station} onClick={selectStructure} />
-    })}
-    </div>
+    })
   )
 }

@@ -1,7 +1,6 @@
 //'use client';
 
 import type { StationProps } from '@/src/gds/container';
-import { kMaxLength } from 'buffer';
 import { MouseEventHandler } from 'react';
 
 type ElementItemProps =  {
@@ -17,12 +16,10 @@ export default function ElementItem ({gelement, station, onClick }: ElementItemP
   const selected = false;
   const attr = selected ? classActive : classInactive;
   return (
-    <div>
-      <a
-        className={attr}
-        onClick={onClick} >
-        { 'ELEM: (' + gelement.sfAttr.ELKEY + ')' }
-      </a>
-    </div>
+    <a
+      className={attr}
+      onClick={onClick} >
+      { 'ELEM(' + gelement.sfAttr.ELKEY + ')' }
+    </a>
   );
 }

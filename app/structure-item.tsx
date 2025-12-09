@@ -17,12 +17,10 @@ export default function StructureItem ({name, station, onClick }: StructureItemP
   const selected = station.structureName == name;
   const attr = selected ? classActive : classInactive;
   return (
-    <div>
-      <a
-        className={attr}
-        onClick={onClick} >
-        { name }
-      </a>
-    </div>
+    <a
+      className={attr}
+      onClick={onClick} >
+      { name }
+    </a>
   );
 }
