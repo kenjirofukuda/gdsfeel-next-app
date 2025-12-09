@@ -56,8 +56,12 @@ export class GElement extends GObject {
     return this._dataExtent;
   }
 
-  toString() {
+  typeString() {
     return 'Element';
+  }
+
+  toString(): string {
+    return `${this.typeString()}(${this.elkey})`;
   }
 
   _lookupDataExtent(): GEO.Rectangle {
@@ -115,6 +119,9 @@ export class GElement extends GObject {
     return undefined;
   }
 
+  loadFromObject(o: any) {
+    this.sfAttr = { ...o.sfAttr };
+  }
 }
 
 export class Sref extends GElement {
@@ -210,6 +217,14 @@ export class Sref extends GElement {
     return rtx;
   }
 
+  toString(): string {
+    return `${this.typeString()}('${this.refName}',${this.elkey})`;
+  }
+
+  typeString(): string {
+    return 'SREF'
+  }
+
 }
 
 export class Aref extends Sref {
@@ -293,6 +308,10 @@ export class Aref extends Sref {
     return result;
   }
 
+  typeString(): string {
+    return 'AREF';
+  }
+
 }
 
 
@@ -332,10 +351,17 @@ export class Path extends GElement {
     return this._outlineCoords;
   }
 
+  typeString(): string {
+    return 'PATH';
+  }
+
 };
 
 
 export class Boundary extends GElement {
+  typeString(): string {
+    return 'BOUNDARY';
+  }
 }
 
 
@@ -363,6 +389,15 @@ export class Text extends GElement {
     stream['presentation'] = this.presentation;
     stream['magnify'] = this.magnify;
   }
+
+  toString(): string {
+    return `${this.typeString()}('${this.string}',${this.elkey})`;
+  }
+
+  typeString() {
+    return 'TEXT';
+  }
+
 }
 
 
@@ -378,6 +413,10 @@ export class Point extends GElement {
 
   _lookupDataExtent() {
     return GEO.MakeRect(this.x, this.y, 0, 0);
+  }
+
+  typeString(): string {
+    return 'POINT';
   }
 };
 

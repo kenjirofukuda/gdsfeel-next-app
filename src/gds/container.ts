@@ -92,6 +92,15 @@ export class Structure extends GObject {
     });
   }
 
+  loadFromObject(o: any) {
+    this.sfAttr = { ...o.sfAttr };
+    o._elements.forEach((e) => {
+      const elem = GElement.fromType(e.hash.type);
+      elem.loadFromObject(e);
+      this.addElement(elem);
+    });
+  }
+
 };
 
 
@@ -152,6 +161,21 @@ export class Library extends GObject {
       struct.loadFromPhpJson(jsonMap.structures[strucName]);
       self.addStructure(struct);
     });
+  }
+
+  loadFromObject(o: any) {
+    this.sfAttr = { ...o.sfAttr };
+    o._structures.forEach((s) => {
+      const struct = new Structure();
+      struct.loadFromObject(s);
+      this.addStructure(struct);
+    });
+  }
+
+  static fromObject(o: any): Library {
+    const library = new Library();
+    library.loadFromObject(o);
+    return library;
   }
 
   stringify(): string {

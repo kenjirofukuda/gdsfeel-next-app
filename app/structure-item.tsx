@@ -18,9 +18,10 @@ export default function StructureItem ({name, station, onClick }: StructureItemP
   const attr = selected ? classActive : classInactive;
   return (
     <a
+      id={String(name)}
       className={attr}
       onClick={onClick} >
-      { name }
+      {name}
     </a>
   );
 }

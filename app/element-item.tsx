@@ -2,9 +2,10 @@
 
 import type { StationProps } from '@/src/gds/container';
 import { MouseEventHandler } from 'react';
+import { GElement } from '@/src/gds/elements';
 
 type ElementItemProps =  {
-  gelement: object;
+  gelement: GElement;
   station: StationProps;
   onClick: MouseEventHandler<HTMLAnchorElement>;
 };
@@ -17,9 +18,10 @@ export default function ElementItem ({gelement, station, onClick }: ElementItemP
   const attr = selected ? classActive : classInactive;
   return (
     <a
+      id={String(gelement.elkey)}
       className={attr}
       onClick={onClick} >
-      { 'ELEM(' + gelement.sfAttr.ELKEY + ')' }
+      { gelement.toString() /* 'ELEM(' + gelement.elkey + ')' */ }
     </a>
   );
 }
