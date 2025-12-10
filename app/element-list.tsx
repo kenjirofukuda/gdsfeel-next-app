@@ -7,7 +7,10 @@ export default function ElementList() {
   const { gdsContext } = useGdsContext();
 
   const selectElement = (e: SyntheticEvent<HTMLAnchorElement>) =>  {
-    console.log({ee: e.target.id});
+    console.log({ee: e});
+    const elkey: number = Number(e.target.id);
+    const activeElement = getActiveStructure(gdsContext)?.elementAtElkey(elkey);
+    console.log({el: activeElement});
   };
 
   const struct = getActiveStructure(gdsContext);

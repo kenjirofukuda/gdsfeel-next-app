@@ -11,6 +11,9 @@ export default function RootLayout({ children }: Readonly<{
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.3/sprintf.min.js"></script>
+      </head>
       <body>{children}</body>
     </html>
   );

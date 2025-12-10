@@ -284,8 +284,9 @@ export class Inform {
     const decoded = [];
     const body = buff.subarray(2);
     switch (dType) {
+      case BIT_ARRAY:
       case INT2:
-        decoded[INT2] = asAtomic(extractInt2Array(body));
+        decoded[dType] = asAtomic(extractInt2Array(body));
         break;
       case INT4:
         decoded[INT4] = asAtomic(extractInt4Array(body));

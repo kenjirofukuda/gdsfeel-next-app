@@ -23,7 +23,7 @@ export class GObject {
   root(): GObject {
     let obj: GObject = this;
     while (true) {
-      if (obj.parent === undefined) {
+      if (! obj.parent) {
         break;
       }
       else {

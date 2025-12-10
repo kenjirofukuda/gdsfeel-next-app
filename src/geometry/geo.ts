@@ -5,6 +5,7 @@ import { Point }     from '@/src/geometry/Point';
 import { Rectangle } from '@/src/geometry/Rectangle';
 import { Matrix2D }  from '@/src/geometry/Matrix2D';
 
+
 type ViewportArgProc = (vp: Viewport) => void;
 type MatrixFunction = () => Matrix2D;
 type WheelDirection = 1 | -1;
@@ -41,7 +42,7 @@ export function MakeMatrix(): Matrix2D {
 
 type dimensionIndex = 0 | 1 | 2; // x, y, z
 export type IndexedPoint = Array<dimensionIndex>;
-type PointLike = Point | IndexedPoint;
+export type PointLike = Point | IndexedPoint;
 export type CE = IndexedPoint;
 export type Coords = Array<CE>;
 
@@ -297,3 +298,7 @@ export function MakeRect(x: number, y: number, width: number, height: number): R
 export function MakePoint(x: number, y: number): Point {
   return new Point(x, y);
 }
+
+export { Point }     from '@/src/geometry/Point';
+export { Rectangle } from '@/src/geometry/Rectangle';
+export { Matrix2D }  from '@/src/geometry/Matrix2D';

@@ -1,11 +1,11 @@
-"use browser";
+//"use browser";
 /// <reference path="../../geometry/geo.ts" />
 /// <reference path="../gds.ts" />
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />
 
-import * as GEO from '../../geometry/geo.js';
-import { GObject } from '../gds.js';
+import * as GEO from '@/src/geometry/geo';
+import { GObject } from '@/src/gds/gds';
 import {
   GElement,
   Point,
@@ -14,16 +14,14 @@ import {
   Text,
   Sref,
   Aref,
-} from '../elements.js';
+} from '@/src/gds/elements';
 
 import {
   Structure,
   Library,
-} from '../container.js';
+} from '@/src/gds/container';
 
 import $ from 'jquery';
-
-
 
 export interface Canvas2D extends CanvasRenderingContext2D {
   _structureView: StructureView;
@@ -91,7 +89,7 @@ export interface GElementDraw extends GElement {
 (Text as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   ctx.font = "bold 16px Arial";
   ctx.strokeStyle = "purple";
-  ctx.strokeText(this.hash.map['STRING'], this.x, this.y);
+  ctx.strokeText(this.string, this.x, this.y);
 };
 
 
@@ -139,7 +137,7 @@ export interface GElementDraw extends GElement {
   if (!this.refStructure) {
     return;
   }
-  if (this.refName === 'PC' && this.hash.elkey === 5) {
+  if (this.refName === 'PC' && this.elkey === 5) {
     const debug = true;
   }
   for (let mat of this.repeatedTransforms()) {
@@ -255,7 +253,7 @@ export class StructureView {
   constructor(portId: string, structure: Structure) {
     const self = this;
     this.portId = portId;
-    this._structure = structure;
+    this._structure = structure || new Structure;
     this.ctx = this.context();
     this.port = new GEO.Viewport(this.ctx.canvas.width, this.ctx.canvas.height);
     this.track = new Tracking(self);
@@ -268,7 +266,7 @@ export class StructureView {
     if (false) {
       this.port.transformFunction = function () {
         const domMat = self.ctx.getTransform();
-        const createjsMat = new createjs.Matrix2D();
+        const createjsMat = new GEO.Matrix2D();
         createjsMat.a = domMat.a;
         createjsMat.b = domMat.b;
         createjsMat.c = domMat.c;
@@ -278,6 +276,10 @@ export class StructureView {
         return createjsMat;
       };
     }
+  }
+
+  set structure(s: Structure) {
+    this._structure = s;
   }
 
   context(): Canvas2D {
@@ -347,4 +349,3 @@ export class StructureView {
   }
 
 };
-

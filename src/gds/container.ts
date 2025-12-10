@@ -51,6 +51,10 @@ export class Structure extends GObject {
     return this._elements;
   }
 
+  elementAtElkey(elkey: number) {
+    return this._elements.find((e: GElement) => e.elkey == elkey);
+  }
+
   dataExtent(): GEO.Rectangle {
     if (!this._dataExtent) {
       this._dataExtent = this._lookupDataExtent();

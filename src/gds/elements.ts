@@ -68,7 +68,7 @@ export class GElement extends GObject {
     const values = this.sfAttr.XY;
     const result: Coords = [];
     const library = this.root() as Library;
-    const dbu = library.databaseUnit();
+    const dbu = library.databaseUnit;
     for (let i = 0; i < values.length / 2; i++) {
       let x = values[i * 2 + 0] * dbu;
       let y = values[i * 2 + 1] * dbu;
@@ -198,7 +198,7 @@ export class Sref extends GElement {
   }
 
   _lookupTransform2(): GEO.Matrix2D {
-    const rtx = new Matrix2D();
+    const rtx = new GEO.Matrix2D();
     const rad = this.angleDegress * Math.PI / 180;
     const radCos = Math.cos(rad);
     const radSin = Math.sin(rad);
@@ -213,6 +213,18 @@ export class Sref extends GElement {
       rtx.d = -rtx.d;               // a22;
     }
     return rtx;
+  }
+
+  _basicOutlinePoints(): Array<GEO.PointLike> {
+    const structureExtent: GEO.Rectangle = this.refStructure.dataExtent();
+    const points = structureExtent.pointArray().map((p: GEO.PointLike) => {
+      return this.transform().transformPoint(p.x, p.y);
+    });
+    return points;
+  }
+
+  _lookupDataExtent(): GEO.Rectangle {
+    return GEO.calcExtentBounds(this._basicOutlinePoints());
   }
 
   toString(): string {
@@ -297,7 +309,7 @@ export class Aref extends Sref {
     let result = [];
     for (let ix = 0; ix < this.cols; ix++) {
       for (let iy = 0; iy < this.rows; iy++) {
-        const otx = new Matrix2D();
+        const otx = new GEO.Matrix2D();
         otx.translate(ix * this.colStep, iy * this.rowStep);
         otx.prependMatrix(this.transform());
         result.push(otx);
