@@ -1,4 +1,3 @@
-// "use server";
 /// <reference path="../../geometry/geo.ts" />
 /// <reference path="../gds.ts" />
 /// <reference path="../elements.ts" />
@@ -6,7 +5,7 @@
 import fs from 'node:fs';
 
 import { Library, Structure } from '@/src/gds/container';
-import { GElement, Text, Boundary, Path, Sref, Aref } from '@/src/gds/elements';
+import { GElement } from '@/src/gds/elements';
 
 // DATA TYPE
 const NO_DATA   = 0;
@@ -149,7 +148,6 @@ const HEADER_MAP_REVERSED = reversedMap(HEADER_MAP);
 function recordSymbol(rType: number): string {
   return HEADER_MAP_REVERSED[rType];
 }
-
 
 const POW_2_56 = 2 ** 56;
 
@@ -371,8 +369,3 @@ export class Inform {
     return fs.readdirSync('.');
   }
 };
-
-
-//const inform = new Inform();
-//inform.gdsPath = '';
-//inform.run();

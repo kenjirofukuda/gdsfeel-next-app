@@ -1,34 +1,28 @@
 'use client';
-import { useGdsContext } from '@/context/gds-context';
-import { StationProps } from '@/src/gds/container';
+import { getLibrary, useGdsContext } from '@/context/gds-context';
 import  StructureItem  from './structure-item';
-import { Library } from '@/src/gds/container';
-import React from 'react';
+import { SyntheticEvent } from 'react';
 
-export default function StructureList( { station }: StationProps ) {
-  const { gdsContext, setGdsContext } = useGdsContext();
-  console.log({gdsContext: gdsContext});
-  const selectStructure = (e) =>  {
-    console.log({e: e.target.innerText});
-    station.structureName = e.target.innerText;
-    const obj = {
-      structureName: station.structureName,
-      libraryObject: gdsContext.libraryObject,
-      library: (! gdsContext.library) && Library.fromObject(gdsContext.libraryObject)
-    };
-    setGdsContext(obj);
+export default function StructureList() {
+  const { gdsContext , setGdsContext }  = useGdsContext();
+
+  const selectStructure = (e: SyntheticEvent<HTMLAnchorElement>) =>  {
+    console.log({es: e.target.id});
+    const newContext = { ...gdsContext }
+    newContext.structureName = e.target.id;
+    setGdsContext(newContext);
   };
 
-  let library = gdsContext.library;
-  if (! library) {
-    library = Library.fromObject(gdsContext.libraryObject);
-  }
-
+  const library = getLibrary(gdsContext);
   const contents = library.structureNames();
 
   return (
     contents.map((each: string) =>
-      <StructureItem key={each} name={each} station={station} onClick={selectStructure} />
+      <StructureItem
+        key={each}
+        name={each}
+        selected={each == gdsContext.structureName}
+        onClick={selectStructure} />
     )
   );
 }

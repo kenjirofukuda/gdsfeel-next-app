@@ -4,22 +4,14 @@
 
 import * as GEO from '@/src/geometry/geo';
 import { GObject } from '@/src/gds/gds';
-import {
-  GElement,
-  Point,
-  Path,
-  Boundary,
-  Text,
-  Sref,
-  Aref,
-} from '@/src/gds/elements';
-
+import { GElement} from '@/src/gds/elements';
 
 export class Structure extends GObject {
   _elements: Array<GElement>;
   _dataExtent?: GEO.Rectangle;
   hash: any;
   _idSeed: number;
+
   constructor() {
     super();
     this._elements = [];
@@ -107,18 +99,16 @@ export class Structure extends GObject {
 export class Library extends GObject {
   _structures: Array<Structure>;
   _structureMap: Map<string, Structure>;
-  // _units: [number, number];
-  // _bgnlib: Array<number>;
-  // _name: string;
   hash: any;
 
   constructor() {
     super();
     this._structures = [];
     this._structureMap = new Map<string, Structure>;
-    // this._units = [0, 0];
-    // this._bgnlib = [];
-    // this._name = '';
+  }
+
+  get databaseUnit(): number {
+    return this.sfAttr['UNITS'][0];
   }
 
   forgetParent() {
@@ -185,6 +175,9 @@ export class Library extends GObject {
     return result;
   }
 
+  asObject(): object {
+    return JSON.parse(this.stringify());
+  }
 }
 
 export class Station {
@@ -198,8 +191,3 @@ export class Station {
     this.element = undefined;
   }
 }
-
-export type StationProps = {
-  library: object;
-  structureName: string;
-};

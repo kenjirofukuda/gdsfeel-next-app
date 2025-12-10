@@ -1,32 +1,26 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { Library } from '@/src/gds/container';
+import { createContext, useContext, useState, ReactNode, Context } from 'react';
+import { Library, Structure } from '@/src/gds/container';
 
-type GdsContextType = {
+interface GdsContextType {
   structureName: string;
-  libraryObject: object;
+  libraryObject: object | undefined;
   library: Library | undefined;
-} | null;
+};
 
-// Contextを作成
-const GdsContext = createContext({
-  structureName: "",
-  libraryObject: undefined,
-  library: undefined
+const GdsContext: Context<GdsContextType> = createContext<GdsContextType>({
+  gdsContext: {
+    structureName: "",
+    libraryObject: undefined,
+    library: undefined
+  },
+  setGdsContext: (context: GdsContextType) => {}
 });
 
-// Providerコンポーネントを作成
+
 export function GdsProvider({ children, initialData }: { children: ReactNode, initialData: GdsContextType}) {
   const [gdsContext, setGdsContext ] = useState<GdsContextType>(initialData);
-
-  // const updateLibrary: GdsContextType = {
-  //   structureName: gdsContext?.structureName,
-  //   libraryObject: gdsContext?.libraryObject,
-  //   library: Library.fromObject(gdsContext?.libraryObject)
-  // };
-
-  // setGdsContext(updateLibrary);
 
   return (
     <GdsContext.Provider value={ {gdsContext, setGdsContext }}>
@@ -36,5 +30,24 @@ export function GdsProvider({ children, initialData }: { children: ReactNode, in
 }
 
 export function useGdsContext() {
-  return useContext(GdsContext);
+  return useContext<GdsContextType>(GdsContext);
+}
+
+export function getLibrary(context: GdsContextType): Library {
+  let library = context.library;
+  if (! library) {
+    library = Library.fromObject(context.libraryObject);
+    context.library = library;
+    console.log("recreate:" +  __filename);
+  }
+  return library;
+}
+
+export function getActiveStructure(context: GdsContextType): Structure | undefined {
+  let struct = undefined;
+   if (context.structureName.length > 0) {
+     struct = getLibrary(context).structureNamed(context.structureName);
+     console.log({struct: struct});
+   }
+  return struct;
 }

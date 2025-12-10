@@ -1,13 +1,9 @@
-// import * as createjs from 'createjs-module';
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
 import * as GEO from '@/src/geometry/geo';
 import { GObject, BUTT_END } from '@/src/gds/gds';
-import {
-  Structure,
-  Library,
-} from '@/src/gds/container';
+import { Structure, Library } from '@/src/gds/container';
 
 export type CE = GEO.CE;
 export type Coords = GEO.Coords;
@@ -56,7 +52,7 @@ export class GElement extends GObject {
     return this._dataExtent;
   }
 
-  typeString() {
+  typeString(): string {
     return 'Element';
   }
 
@@ -69,11 +65,13 @@ export class GElement extends GObject {
   }
 
   _lookupVertices(): Coords {
-    let values = this.sfAttr.XY;
-    let result: Coords = [];
+    const values = this.sfAttr.XY;
+    const result: Coords = [];
+    const library = this.root() as Library;
+    const dbu = library.databaseUnit();
     for (let i = 0; i < values.length / 2; i++) {
-      let x = values[i * 2 + 0] * 0.001;
-      let y = values[i * 2 + 1] * 0.001;
+      let x = values[i * 2 + 0] * dbu;
+      let y = values[i * 2 + 1] * dbu;
       result.push([x, y] as CE);
     }
     return result as Coords;
@@ -314,7 +312,6 @@ export class Aref extends Sref {
 
 }
 
-
 export class Path extends GElement {
   _outlineCoords: Coords | undefined;
 
@@ -366,11 +363,11 @@ export class Boundary extends GElement {
 
 
 export class Text extends GElement {
-  get string() {
+  get string(): string {
     return this.sfAttr['STRING'];
   }
 
-  get texttype() {
+  get texttype(): number {
     return this.sfAttr['TEXTTYPE'] || 0;
   }
 
@@ -407,7 +404,7 @@ export class Point extends GElement {
     super(hash);
   }
 
-  toString() {
+  toString(): string {
     return "Point(" + this.vertices()[0] + ")";
   }
 
