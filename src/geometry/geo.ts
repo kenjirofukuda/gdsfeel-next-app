@@ -299,6 +299,17 @@ export function MakePoint(x: number, y: number): Point {
   return new Point(x, y);
 }
 
+function floatConvertSyncer(num: number, dig: number): number {
+  const p = Math.pow(10, dig);
+  return Math.round(num * p) / p;
+}
+
+Number.prototype.roundDigits = function (dig): number {
+  return floatConvertSyncer(this, dig);
+};
+
+
+
 export { Point }     from '@/src/geometry/Point';
 export { Rectangle } from '@/src/geometry/Rectangle';
 export { Matrix2D }  from '@/src/geometry/Matrix2D';

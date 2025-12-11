@@ -1,11 +1,11 @@
-//"use browser";
+"use browser";
 /// <reference path="../../geometry/geo.ts" />
 /// <reference path="../gds.ts" />
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />
 
 import * as GEO from '@/src/geometry/geo';
-import { GObject } from '@/src/gds/gds';
+
 import {
   GElement,
   Point,
@@ -16,16 +16,22 @@ import {
   Aref,
 } from '@/src/gds/elements';
 
-import {
-  Structure,
-  Library,
-} from '@/src/gds/container';
+import { Structure } from '@/src/gds/container';
 
 import $ from 'jquery';
+import { sprintf } from "sprintf-js";
+
+declare global {
+  interface Window {
+    structureView: StructureView;
+  }
+}
 
 export interface Canvas2D extends CanvasRenderingContext2D {
   _structureView: StructureView;
 }
+
+type Viewport = GEO.Viewport;
 
 type CustomWheelEvent = WheelEvent & {
   readonly wheelDelta?: number;
@@ -61,7 +67,6 @@ function strokeSlantCrossV2(ctx: Canvas2D, port: GEO.Viewport, x: number, y: num
   ctx.stroke();
 };
 
-
 const strokeSlantCross = strokeSlantCrossV2;
 
 function strokePoints(ctx: Canvas2D, port: GEO.Viewport, points: GEO.Coords, closing: boolean = false) {
@@ -76,44 +81,46 @@ function strokePoints(ctx: Canvas2D, port: GEO.Viewport, points: GEO.Coords, clo
   ctx.stroke();
 }
 
-export interface GElementDraw extends GElement {
-  drawOn(ctx: Canvas2D, port: GEO.Viewport): void;
-}
+
+//declare global {
+  interface GElement {
+    drawOn(ctx: Canvas2D, port: Viewport): void;
+  };
+//}
 
 // @virtual
-(GElement as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+GElement.prototype.drawOn = function (_ctx: Canvas2D, _port: GEO.Viewport): void {
   // subclass must be override
 };
 
 // @override
-(Text as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Text.prototype.drawOn = function (ctx: Canvas2D, _port: GEO.Viewport): void {
   ctx.font = "bold 16px Arial";
   ctx.strokeStyle = "purple";
   ctx.strokeText(this.string, this.x, this.y);
 };
 
-
-(Boundary as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Boundary.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   strokePoints(ctx, port, this.vertices(), true);
 };
 
-(Path as any).prototype.strokeCenterline = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Path.prototype.strokeCenterline = function (ctx: Canvas2D, port: GEO.Viewport): void {
   strokePoints(ctx, port, this.vertices());
 };
 
-(Path as any).prototype.strokeOutline = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Path.prototype.strokeOutline = function (ctx: Canvas2D, port: GEO.Viewport): void {
   strokePoints(ctx, port, this.outlineCoords());
 };
 
 // @override
-(Path as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Path.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   ctx.strokeStyle = "black";
   this.strokeCenterline(ctx, port);
   this.strokeOutline(ctx, port);
 };
 
 // @override
-(Sref as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Sref.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   if (!this.refStructure) {
     return;
   }
@@ -133,7 +140,7 @@ export interface GElementDraw extends GElement {
 
 
 // @override
-(Aref as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Aref.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   if (!this.refStructure) {
     return;
   }
@@ -158,7 +165,7 @@ export interface GElementDraw extends GElement {
 };
 
 // @override
-(Point as any).prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
+Point.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   strokeSlantCross(ctx, port, this.x, this.y);
 };
 
@@ -241,6 +248,7 @@ export class Tracking {
   }
 };
 
+type StructureViewProc = (view: StructureView) =>  void;
 
 export class StructureView {
   portId: string;
@@ -249,8 +257,9 @@ export class StructureView {
   port: GEO.Viewport;
   track: Tracking;
   needsRedraw: boolean;
+  resizeFunction: StructureViewProc;
 
-  constructor(portId: string, structure: Structure) {
+  constructor(portId: string, structure?: Structure) {
     const self = this;
     this.portId = portId;
     this._structure = structure || new Structure;
@@ -258,11 +267,12 @@ export class StructureView {
     this.port = new GEO.Viewport(this.ctx.canvas.width, this.ctx.canvas.height);
     this.track = new Tracking(self);
     this.needsRedraw = true;
-    this.port.portDamageFunction = function (port) {
+    this.port.portDamageFunction = (port: GEO.Viewport) => {
       if (port.transformDepth === 0) {
         self.needsRedraw = true;
       }
     };
+    this.resizeFunction = (v: StructureView) => {};
     if (false) {
       this.port.transformFunction = function () {
         const domMat = self.ctx.getTransform();
@@ -280,6 +290,7 @@ export class StructureView {
 
   set structure(s: Structure) {
     this._structure = s;
+    this.needsRedraw = true;
   }
 
   context(): Canvas2D {
@@ -314,7 +325,6 @@ export class StructureView {
     ctx.lineWidth = 1 / this.port.scale;
     ctx.strokeStyle = 'black';
     this.drawStructure(ctx, this.port, this._structure);
-
   }
 
   drawStructure(ctx: Canvas2D, port: GEO.Viewport, structure: Structure): void {
@@ -323,7 +333,7 @@ export class StructureView {
 
   drawElements(ctx: Canvas2D, port: GEO.Viewport, elements: Array<GElement>): void {
     elements.forEach(function (e: GElement) {
-      (e as GElementDraw).drawOn(ctx, port);
+      e.drawOn(ctx, port);
     });
   }
 
@@ -347,5 +357,54 @@ export class StructureView {
   zoomHalf(): void {
     this.port.zoomHalf();
   }
-
 };
+
+
+export function loadIt(structureView?: StructureView, portId?: string): void {
+  const REDRAW_INTERVAL_MSECS = 100;
+  portId = portId || "canvas";
+  structureView = structureView ?? new StructureView(portId);
+  window.structureView = structureView;
+  let queue: NodeJS.Timeout | undefined = undefined;
+  const waitMSecs = 300;
+
+  console.log({loadIt: structureView});
+  window.addEventListener("resize", () => {
+    clearTimeout(queue);
+    queue = setTimeout(() => {
+      structureView.resizeFunction(structureView);
+    }, waitMSecs);
+  }, false);
+  structureView.resizeFunction(structureView);
+
+  structureView.fit();
+  setInterval(() => {
+    if (structureView) {
+      structureView.redraw();
+    }
+  }, REDRAW_INTERVAL_MSECS);
+}
+
+export function mouseMoveHandler(e: MouseEvent, structureView: StructureView): void {
+  $("#deviceX").html(sprintf("%5d", e.offsetX));
+  $("#deviceY").html(sprintf("%5d", e.offsetY));
+  const worldPoint = structureView.port.deviceToWorld(e.offsetX, e.offsetY);
+  $("#worldX").html(sprintf("%+20.4f", worldPoint.x.roundDigits(4)));
+  $("#worldY").html(sprintf("%+20.4f", worldPoint.y.roundDigits(4)));
+}
+
+export function adjustPortSize(structureView?: StructureView): void {
+  let w = $("#canvas-wrapper").width();
+  let h = $("#canvas-wrapper").height();
+  $("#canvas").attr("width", String(w));
+  $("#canvas").attr("height", String(h));
+  if (structureView) {
+    structureView.port.setSize(w, h);
+  }
+  $("#canvas-wrapper").css("display", "flex");
+}
+
+export function adjustRowCenter(): void {
+  $("#row2").height(0);
+  $("#canvas-wrapper").height(0);
+}

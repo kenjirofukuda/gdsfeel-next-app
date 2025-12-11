@@ -87,7 +87,7 @@ export class GElement extends GObject {
 
   attrOn(stream: any): void {
     stream['vertices'] = this.vertices();
-    stream['elkey'] = this.sfAttr['ELKEY'];
+    stream['elkey'] = this.elkey;
     stream['datatype'] = this.datatype;
     stream['layer'] = this.layer;
     stream['dataExtent'] = this.dataExtent();
@@ -228,7 +228,7 @@ export class Sref extends GElement {
   }
 
   toString(): string {
-    return `${this.typeString()}('${this.refName}',${this.elkey})`;
+    return `${this.typeString()}(${this.elkey},'${this.refName}')`;
   }
 
   typeString(): string {
@@ -400,7 +400,7 @@ export class Text extends GElement {
   }
 
   toString(): string {
-    return `${this.typeString()}('${this.string}',${this.elkey})`;
+    return `${this.typeString()}(${this.elkey},'${this.string}')`;
   }
 
   typeString() {
