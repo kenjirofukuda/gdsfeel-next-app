@@ -4,7 +4,7 @@
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />
 
-import * as GEO from '@/src/geometry/geo';
+import * as GEO from '@/geometry/geo';
 
 import {
   GElement,
@@ -14,9 +14,9 @@ import {
   Text,
   Sref,
   Aref,
-} from '@/src/gds/elements';
+} from '@/gds/elements';
 
-import { Structure } from '@/src/gds/container';
+import { Structure } from '@/gds/container';
 
 import $ from 'jquery';
 import { sprintf } from "sprintf-js";

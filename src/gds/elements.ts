@@ -1,9 +1,9 @@
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
-import * as GEO from '@/src/geometry/geo';
-import { GObject, BUTT_END } from '@/src/gds/gds';
-import { Structure, Library } from '@/src/gds/container';
+import * as GEO from '@/geometry/geo';
+import { GObject, BUTT_END } from '@/gds/gds';
+import { Structure, Library } from '@/gds/container';
 
 export type CE = GEO.CE;
 export type Coords = GEO.Coords;

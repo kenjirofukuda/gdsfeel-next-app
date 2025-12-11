@@ -8,7 +8,7 @@ import {
   adjustPortSize,
   adjustRowCenter,
   mouseMoveHandler,
-} from '@/src/gds/browser/canvas';
+} from '@/gds/browser/canvas';
 
 export default function GdsCanvas() {
   const { gdsContext, setGdsContext } = useGdsContext();

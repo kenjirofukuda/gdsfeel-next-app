@@ -1,8 +1,8 @@
 import InfoBar from './info-bar';
 import ViewCommands from './view-commands';
 import ExampleList from './example-list';
-import { Inform } from '@/src/gds/server/stream';
-import { Library } from '@/src/gds/container';
+import { Inform } from '@/gds/server/stream';
+import { Library } from '@/gds/container';
 import path from 'node:path';
 
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'

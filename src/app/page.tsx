@@ -3,8 +3,8 @@ import InfoBar from './info-bar';
 import StructureList from './structure-list';
 import ElementList from './element-list';
 import GdsCanvas from './gds-canvas';
-import { Inform } from '@/src/gds/server/stream';
-import { Library } from '@/src/gds/container';
+import { Inform } from '@/gds/server/stream';
+import { Library } from '@/gds/container';
 import path from 'node:path';
 import { GdsProvider } from '@/context/gds-context';
 

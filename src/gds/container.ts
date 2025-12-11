@@ -2,9 +2,9 @@
 /// <reference path="./gds.ts" />
 /// <reference path="./elements.ts" />
 
-import * as GEO from '@/src/geometry/geo';
-import { GObject } from '@/src/gds/gds';
-import { GElement} from '@/src/gds/elements';
+import * as GEO from '@/geometry/geo';
+import { GObject } from '@/gds/gds';
+import { GElement} from '@/gds/elements';
 
 export class Structure extends GObject {
   _elements: Array<GElement>;

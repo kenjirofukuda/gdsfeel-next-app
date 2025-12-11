@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, Context } from 'react';
-import { Library, Structure } from '@/src/gds/container';
+import { Library, Structure } from '@/gds/container';
 
 interface GdsContextType {
   structureName: string;

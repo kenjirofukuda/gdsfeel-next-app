@@ -4,8 +4,8 @@
 /// <reference path="../container.ts" />
 import fs from 'node:fs';
 
-import { Library, Structure } from '@/src/gds/container';
-import { GElement } from '@/src/gds/elements';
+import { Library, Structure } from '@/gds/container';
+import { GElement } from '@/gds/elements';
 
 // DATA TYPE
 const NO_DATA   = 0;

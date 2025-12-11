@@ -1,5 +1,5 @@
 import { MouseEventHandler } from 'react';
-import { GElement } from '@/src/gds/elements';
+import { GElement } from '@/gds/elements';
 
 interface ElementItemProps {
   element: GElement;
