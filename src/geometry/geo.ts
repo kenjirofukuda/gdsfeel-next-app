@@ -5,11 +5,9 @@ import { Point }     from '@/geometry/Point';
 import { Rectangle } from '@/geometry/Rectangle';
 import { Matrix2D }  from '@/geometry/Matrix2D';
 
-
 type ViewportArgProc = (vp: Viewport) => void;
 type MatrixFunction = () => Matrix2D;
 type WheelDirection = 1 | -1;
-// export type Matrix2D = createjs.Matrix2D;
 
 export const EPS = 1e-8;
 export const PI_HALF = 0.5 * Math.PI;
@@ -23,56 +21,11 @@ export function MakeMatrix(): Matrix2D {
   return new Matrix2D();
 }
 
-// export class Point extends createjs.Point {
-//   //public x: number;
-//   //public y: number;
-//   constructor(x: number, y: number) {
-//     super(x, y);
-//   }
-
-//   equals(other: Point): boolean {
-//     return this.x === other.x && this.y === other.y;
-//   }
-
-//   minus(other: Point): Point {
-//     return new Point(this.x - other.x, this.y - other.y);
-//   }
-// }
-
-
 type dimensionIndex = 0 | 1 | 2; // x, y, z
 export type IndexedPoint = Array<dimensionIndex>;
 export type PointLike = Point | IndexedPoint;
 export type CE = IndexedPoint;
 export type Coords = Array<CE>;
-
-
-// export class Rectangle extends createjs.Rectangle {
-//   //public x: number;
-//   //public y: number;
-//   //public width: number;
-//   //public height: number
-
-//   constructor(x?: number, y?: number, width?: number, height?: number) {
-//     super(x, y, width, height);
-//   }
-
-//   center(): Point {
-//     return new Point(
-//       this.x + this.width / 2.0,
-//       this.y + this.height / 2.0);
-//   };
-
-//   pointArray(): Point[] {
-//     const points = [];
-//     points.push(new Point(this.x, this.y));
-//     points.push(new Point(this.x, this.y + this.height));
-//     points.push(new Point(this.x + this.width, this.y + this.height));
-//     points.push(new Point(this.x + this.width, this.y));
-//     return points;
-//   };
-// }
-
 
 export class Viewport {
   private width: number;
@@ -307,7 +260,6 @@ function floatConvertSyncer(num: number, dig: number): number {
 Number.prototype.roundDigits = function (dig): number {
   return floatConvertSyncer(this, dig);
 };
-
 
 
 export { Point }     from '@/geometry/Point';
