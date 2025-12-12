@@ -1,4 +1,6 @@
 'use client';
+
+import { MouseEvent } from 'react';
 import { getLibrary, useGdsContext } from '@/context/gds-context';
 import  StructureItem  from './structure-item';
 import { SyntheticEvent } from 'react';
@@ -6,10 +8,10 @@ import { SyntheticEvent } from 'react';
 export default function StructureList() {
   const { gdsContext , setGdsContext }  = useGdsContext();
 
-  const selectStructure = (e: SyntheticEvent<HTMLAnchorElement>) =>  {
-    console.log({es: e.target.id});
+  const selectStructure = (e: MouseEvent<HTMLAnchorElement>) =>  {
+    // console.log({es: e.target.id});
     const newContext = { ...gdsContext }
-    newContext.structureName = e.target.id;
+    newContext.structureName = e.currentTarget.id;
     setGdsContext(newContext);
   };
 

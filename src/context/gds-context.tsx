@@ -47,7 +47,6 @@ export function getActiveStructure(context: GdsContextType): Structure | undefin
   let struct = undefined;
    if (context.structureName.length > 0) {
      struct = getLibrary(context).structureNamed(context.structureName);
-     console.log({struct: struct});
    }
   return struct;
 }

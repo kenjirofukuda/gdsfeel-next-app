@@ -430,7 +430,7 @@ export class Matrix2D {
    * @param {Point | Object} [pt] An object to copy the result into. If omitted a generic object with x/y properties will be returned.
    * @return {Point} This matrix. Useful for chaining method calls.
    **/
-  transformPoint(x: number, y: number, pt: PointLike): PointLike {
+  transformPoint(x: number, y: number, pt?: PointLike): PointLike {
     pt = pt || {x: 0, y: 0} ;
     pt.x = x*this.a+y*this.c+this.tx;
     pt.y = x*this.b+y*this.d+this.ty;

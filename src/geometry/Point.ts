@@ -1,12 +1,16 @@
 // @see https://github.com/CreateJS/EaselJS/blob/master/src/easeljs/geom/Point.js
 
-export type PointLike = {
+export type IndexedPoint2D = Array<0 | 1>;
+export type IndexedPoint3D = Array<0 | 1 | 2>;
+
+export interface Point2DInit {
   x: number;
   y: number;
 };
 
+export type PointLike = Point2DInit | IndexedPoint2D;
 
-export class Point {
+export class Point implements Point2DInit {
   x: number;
   y: number;
 
@@ -130,3 +134,21 @@ export class Point {
     return "[Point (x="+this.x+" y="+this.y+")]";
   }
 }
+
+export function point_x(obj: PointLike): number {
+  if ('x' in obj) {
+    return obj['x'];
+  }
+  else {
+    return obj[0];
+  }
+};
+
+export function point_y(obj: PointLike): number {
+  if ('y' in obj) {
+    return obj['y'];
+  }
+  else {
+    return obj[1];
+  }
+};

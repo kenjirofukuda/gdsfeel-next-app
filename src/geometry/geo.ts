@@ -1,9 +1,9 @@
 
 // can't import createjs in typescript environment
 // import * as createjs from 'createjs-module';
-import { Point }     from '@/geometry/Point';
-import { Rectangle } from '@/geometry/Rectangle';
-import { Matrix2D }  from '@/geometry/Matrix2D';
+import { Point, point_x, point_y, IndexedPoint2D } from './Point.js';
+import { Rectangle } from './Rectangle.js';
+import { Matrix2D }  from './Matrix2D.js';
 
 type ViewportArgProc = (vp: Viewport) => void;
 type MatrixFunction = () => Matrix2D;
@@ -21,10 +21,7 @@ export function MakeMatrix(): Matrix2D {
   return new Matrix2D();
 }
 
-type dimensionIndex = 0 | 1 | 2; // x, y, z
-export type IndexedPoint = Array<dimensionIndex>;
-export type PointLike = Point | IndexedPoint;
-export type CE = IndexedPoint;
+export type CE = IndexedPoint2D;
 export type Coords = Array<CE>;
 
 export class Viewport {
@@ -35,12 +32,12 @@ export class Viewport {
   private centerY: number;
   private portCenterX: number;
   private portCenterY: number;
-  private _transform: Matrix2D | null;
-  private _invertTransform: Matrix2D | null;
-  private _basicTransform: Matrix2D | null;
+  private _transform: Matrix2D | undefined;
+  private _invertTransform: Matrix2D | undefined;
+  private _basicTransform: Matrix2D | undefined;
   private transformStack: Matrix2D[];
-  public portDamageFunction: ViewportArgProc | null;
-  public transformFunction: MatrixFunction | null;
+  public portDamageFunction: ViewportArgProc | undefined;
+  public transformFunction: MatrixFunction | undefined;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -51,12 +48,12 @@ export class Viewport {
     this._resetPortCenter();
     this.portCenterX = width / 2.0;
     this.portCenterY = height / 2.0;
-    this._transform = null;
-    this._invertTransform = null;
-    this._basicTransform = null;
+    this._transform = undefined;
+    this._invertTransform = undefined;
+    this._basicTransform = undefined;
     this.transformStack = [];
-    this.portDamageFunction = null;
-    this.transformFunction = null;
+    this.portDamageFunction = undefined;
+    this.transformFunction = undefined;
   }
 
   get scale(): number { return this._scale; }
@@ -116,14 +113,14 @@ export class Viewport {
     if (typeof (this.transformFunction) === 'function') {
       return this.transformFunction();
     }
-    if (this._transform === null) {
+    if (this._transform === undefined) {
       this._transform = this._lookupTransform();
     }
     return this._transform;
   }
 
   invertTransform(): Matrix2D {
-    if (this._invertTransform === null) {
+    if (this._invertTransform === undefined) {
       this._invertTransform = this.transform().clone().invert();
     }
     return this._invertTransform;
@@ -144,7 +141,7 @@ export class Viewport {
     this._damageTransform();
   }
 
-  popTransform(): Matrix2D | null | any {
+  popTransform(): Matrix2D | undefined | any {
     if (this.transformStack.length === 0) {
       return new Matrix2D();
     }
@@ -163,7 +160,7 @@ export class Viewport {
   }
 
   basicTransform(): Matrix2D {
-    if (this._basicTransform === null) {
+    if (this._basicTransform === undefined) {
       this._basicTransform = this._lookupBasicTransform();
     }
     return this._basicTransform;
@@ -197,10 +194,10 @@ export class Viewport {
   }
 
   _damageTransform(): void {
-    this._basicTransform = null;
-    this._transform = null;
-    this._invertTransform = null;
-    if (this.portDamageFunction !== null) {
+    this._basicTransform = undefined;
+    this._transform = undefined;
+    this._invertTransform = undefined;
+    if (this.portDamageFunction !== undefined) {
       const self = this;
       this.portDamageFunction(self);
     }
@@ -208,23 +205,6 @@ export class Viewport {
 } // Viewport
 
 
-export function point_x(obj: PointLike): number {
-  if ('x' in obj) {
-    return obj['x'];
-  }
-  else {
-    return obj[0];
-  }
-};
-
-export function point_y(obj: PointLike): number {
-  if ('y' in obj) {
-    return obj['y'];
-  }
-  else {
-    return obj[1];
-  }
-};
 
 export function calcExtentBounds(points: any[]): Rectangle {
   let minX = Number.MAX_VALUE;
@@ -257,11 +237,17 @@ function floatConvertSyncer(num: number, dig: number): number {
   return Math.round(num * p) / p;
 }
 
-Number.prototype.roundDigits = function (dig): number {
+declare global {
+  interface Number {
+    roundDigits(dig: number): number;
+  }
+}
+
+Number.prototype.roundDigits = function (dig: number): number {
   return floatConvertSyncer(this, dig);
 };
 
 
-export { Point }     from '@/geometry/Point';
-export { Rectangle } from '@/geometry/Rectangle';
-export { Matrix2D }  from '@/geometry/Matrix2D';
+export { Point, point_x, point_y }     from './Point.js';
+export { Rectangle } from './Rectangle.js';
+export { Matrix2D }  from './Matrix2D.js';

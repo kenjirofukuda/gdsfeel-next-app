@@ -1,9 +1,9 @@
 /// <reference path="../geometry/geo.ts" />
 /// <reference path="gds.ts" />
 /// <reference path="container.ts" />
-import * as GEO from '@/geometry/geo';
-import { GObject, BUTT_END } from '@/gds/gds';
-import { Structure, Library } from '@/gds/container';
+import * as GEO from '../geometry/geo.js';
+import { GObject, BUTT_END } from './gds.js';
+import { Structure, Library } from './container.js';
 
 export type CE = GEO.CE;
 export type Coords = GEO.Coords;
@@ -27,7 +27,7 @@ export class GElement extends GObject {
   }
 
   get elkey(): number {
-    return this.sfAttr.ELKEY || -1;
+    return this.sfAttr['ELKEY'] || -1;
   }
 
   get x(): number {
@@ -65,7 +65,7 @@ export class GElement extends GObject {
   }
 
   _lookupVertices(): Coords {
-    const values = this.sfAttr.XY;
+    const values = this.sfAttr['XY'];
     const result: Coords = [];
     const library = this.root() as Library;
     const dbu = library.databaseUnit;
@@ -217,7 +217,7 @@ export class Sref extends GElement {
 
   _basicOutlinePoints(): Array<GEO.PointLike> {
     const structureExtent: GEO.Rectangle = this.refStructure.dataExtent();
-    const points = structureExtent.pointArray().map((p: GEO.PointLike) => {
+    const points = structureExtent.pointArray().map((p: GEO.Point) => {
       return this.transform().transformPoint(p.x, p.y);
     });
     return points;

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "node20",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext", "web"],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -10,9 +10,10 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [

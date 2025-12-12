@@ -1,5 +1,5 @@
 import InfoBar from './info-bar';
-//import ViewCommands from './view-commands';
+import ViewCommands from './view-commands';
 import StructureList from './structure-list';
 import ElementList from './element-list';
 import GdsCanvas from './gds-canvas';
@@ -36,6 +36,7 @@ export default async function Page() {
           </div>
           <div id="box-right" className="flex">
             <InfoBar />
+            <ViewCommands />
             <GdsCanvas />
           </div>
         </div>

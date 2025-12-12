@@ -4,7 +4,8 @@
 /// <reference path="../elements.ts" />
 /// <reference path="../container.ts" />
 
-import * as GEO from '@/geometry/geo';
+import * as GEO from '../../geometry/geo.js';
+// import * as dom from 'dom';
 
 import {
   GElement,
@@ -14,9 +15,9 @@ import {
   Text,
   Sref,
   Aref,
-} from '@/gds/elements';
+} from '../elements.js';
 
-import { Structure } from '@/gds/container';
+import { Structure } from '../container.js';
 
 import $ from 'jquery';
 import { sprintf } from "sprintf-js";
@@ -82,11 +83,11 @@ function strokePoints(ctx: Canvas2D, port: GEO.Viewport, points: GEO.Coords, clo
 }
 
 
-//declare global {
+declare module '../elements.js' {
   interface GElement {
     drawOn(ctx: Canvas2D, port: Viewport): void;
-  };
-//}
+  }
+}
 
 // @virtual
 GElement.prototype.drawOn = function (_ctx: Canvas2D, _port: GEO.Viewport): void {
@@ -103,6 +104,13 @@ Text.prototype.drawOn = function (ctx: Canvas2D, _port: GEO.Viewport): void {
 Boundary.prototype.drawOn = function (ctx: Canvas2D, port: GEO.Viewport): void {
   strokePoints(ctx, port, this.vertices(), true);
 };
+
+declare module '../elements.js' {
+  interface Path {
+    strokeCenterline(ctx: Canvas2D, port: Viewport): void;
+    strokeOutline(ctx: Canvas2D, port: Viewport): void;
+  }
+}
 
 Path.prototype.strokeCenterline = function (ctx: Canvas2D, port: GEO.Viewport): void {
   strokePoints(ctx, port, this.vertices());
@@ -368,7 +376,7 @@ export function loadIt(structureView?: StructureView, portId?: string): void {
   let queue: NodeJS.Timeout | undefined = undefined;
   const waitMSecs = 300;
 
-  console.log({loadIt: structureView});
+  // console.log({loadIt: structureView});
   window.addEventListener("resize", () => {
     clearTimeout(queue);
     queue = setTimeout(() => {

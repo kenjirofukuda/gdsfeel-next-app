@@ -1,6 +1,6 @@
 // @see https://github.com/CreateJS/EaselJS/blob/master/src/easeljs/geom/Rectangle.js
 
-import { Point } from '@/geometry/Point';
+import { Point } from './Point.js';
 
 export class Rectangle {
   /**

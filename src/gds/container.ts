@@ -2,9 +2,9 @@
 /// <reference path="./gds.ts" />
 /// <reference path="./elements.ts" />
 
-import * as GEO from '@/geometry/geo';
-import { GObject } from '@/gds/gds';
-import { GElement} from '@/gds/elements';
+import * as GEO from '../geometry/geo.js';
+import { GObject } from './gds.js';
+import { GElement} from './elements.js';
 
 export class Structure extends GObject {
   _elements: Array<GElement>;
@@ -39,10 +39,10 @@ export class Structure extends GObject {
   addElement(e: GElement) {
     this._idSeed++;
     let elkey = this._idSeed;
-    if (e.sfAttr.ELKEY) {
-      elkey = e.sfAttr.ELKEY;
+    if (e.sfAttr['ELKEY']) {
+      elkey = e.sfAttr['ELKEY'];
     }
-    e.sfAttr.ELKEY = elkey;
+    e.sfAttr['ELKEY'] = elkey;
     e.parent = this as GObject;
     this._elements.push(e);
   };
