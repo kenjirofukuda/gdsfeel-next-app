@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext", "web"],
+    "target": "es2024",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2024"
+    ],
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -10,7 +14,7 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowImportingTsExtensions": true,
@@ -23,8 +27,11 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "module": "esnext"
   },
   "include": [
     "./src/**/*.ts",
@@ -36,9 +43,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "dist/**"],
-  "references": [
-    { "path": "./tsconfig.onejs.json" },
-    { "path": "./tsconfig.module.json" }
+  "exclude": [
+    "node_modules"
   ]
 }

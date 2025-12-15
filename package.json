@@ -21,6 +21,7 @@
   "dependencies": {
     "createjs": "^1.0.1",
     "createjs-module": "^0.8.3",
+    "gdsfeel-js": "git+https://github.com/kenjirofukuda/gdsfeel-js.git",
     "jquery": "^3.7.1",
     "next": "^16.0.7",
     "react": "^19.2.1",
@@ -28,17 +29,6 @@
     "sprintf-js": "^1.1.3"
   },
   "scripts": {
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:esm": "run-s build-esm postbuild-esm",
-    "build-esm": "tsc --project tsconfig.esm.json",
-    "postbuild-esm": "tsc-alias -p tsconfig.esm.json",
-    "dev": "next dev",
-    "build-onejs": "run-s tsc-onejs fix",
-    "test": "run-s build js",
-    "tsc": "tsc -p .",
-    "tsc-onejs": "tsc -p tsconfig.onejs.json",
-    "tsc-module": "tsc -p tsconfig.module.json",
-    "fix": "fix-esm-import-path dist/onejs/",
-    "js": "node dist/test"
+    "dev": "next dev"
   }
 }

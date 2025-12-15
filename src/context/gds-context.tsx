@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, Context } from 'react';
-import { Library, Structure } from '@/gds/container';
+import { Library } from 'gdsfeel-js';
 
 interface GdsContextType {
   structureName: string;
@@ -15,7 +15,7 @@ const GdsContext: Context<GdsContextType> = createContext<GdsContextType>({
     libraryObject: undefined,
     library: undefined
   },
-  setGdsContext: (context: GdsContextType) => {}
+  setGdsContext: (_context: GdsContextType) => {}
 });
 
 

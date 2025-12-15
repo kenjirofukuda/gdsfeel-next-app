@@ -1,25 +1,24 @@
 'use client';
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
-import { useGdsContext } from '@/context/gds-context';
+import { MouseEvent } from 'react';
 
 export default function ViewCommands () {
-  const { gdsContext, setGdsContext } = useGdsContext();
   const attr = 'bg-gray-100 hover:bg-gray-200 text-black font-bold py-0 px-1 border';
 
-  const zoomDoubleHandler = (e) => {
+  const zoomDoubleHandler = (_e: MouseEvent<HTMLInputElement>) => {
     if (window.structureView) {
       window.structureView.zoomDouble();
     }
   };
 
-  const zoomHalfHandler = (e) => {
+  const zoomHalfHandler = (_e: MouseEvent<HTMLInputElement>) => {
     if (window.structureView) {
       window.structureView.zoomHalf();
     }
   };
 
-  const zoomFit = (e) => {
+  const zoomFit = (_e: MouseEvent<HTMLInputElement>) => {
     if (window.structureView) {
       window.structureView.fit();
     }

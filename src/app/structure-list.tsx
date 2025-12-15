@@ -3,7 +3,6 @@
 import { MouseEvent } from 'react';
 import { getLibrary, useGdsContext } from '@/context/gds-context';
 import  StructureItem  from './structure-item';
-import { SyntheticEvent } from 'react';
 
 export default function StructureList() {
   const { gdsContext , setGdsContext }  = useGdsContext();

@@ -1,108 +1,44 @@
-#+title: gdsfeel-js
+#+title: gdsfeel-next-app
 #+author: kenjirofukuda@gmail.com
 #+options: toc:nil num:nil ^:nil ^:{}
 #+HTML_HEAD_EXTRA: <style> .figure p {text-align: left;}</style>
 
-* GdsFeel TypeScript実装
-
-関連リポジトリ、[[https://github.com/kenjirofukuda/gdsfeel-php][gdsfeel-php]] のJavaScript実装を抜き出して型ヒントを付加したもの。
-- <2025-10-21 Tue> gdsfeel-php に単一ファイルにまとめた、gdsall.js を実験使用中
-
-- 親リポジトリ :: [[https://github.com/kenjirofukuda/gdsfeel-common][gdsfeel-common]]
-
-#+begin_example
-.
-├── package.json
-├── package-lock.json
-├── README.org
-├── src                    # <----- TypeScript 実装
-│   ├── gds                # gds/直下は、browser/server共通
-│   │   ├── browser
-│   │   │   └── canvas.ts
-│   │   ├── server         
-│   │   │   └── inform.ts
-│   │   ├── container.ts
-│   │   ├── elements.ts
-│   │   └── gds.ts
-│   └── geometry
-│       └── geo.ts
-└── tsconfig.json
-#+end_example
-
-* [TODO]
-** +createjs.Matrix2D から DOMMatrix への変更+
-DOMMatrixはサーバーコンテキストには存在しないため、この変更は行わない。
-- https://developer.mozilla.org/ja/docs/Web/API/DOMMatrix
-
-引き続き、createjsの幾何クラス群を採用しているが、継承クラスにて、継承元のフォールドメンバーが継承先のクラスで認識できないので
-コードをコピーしてベタ打ちしている。
-
-ライセンスの問題上好ましくはないのでいずれは継承に戻すがこの問題がクリアできない間はコピーペーストの窃盗コードにメソッドを追加する形で仮運用しておく。
-
-** TODO 幾何クラスのライブラリ再選定
-手早く実装するために、あまり吟味せず当時まだ認知度が高かった createjsを再利用していた。
-
-クライアントでも、サーバーでも使える幾何クラスライブラリを探した結果、romgrk/2d-geometry
-が利用できるようである。
-
-機能が豊富なのは利点ではある。だが、大量のエクステントをキャッシュする本システムにはメモリコストが高いので
-直にフィールドに保持させる利用方法は見送ることにした。
-
-有益な関数軍があるので計算過用の一時オブジェクトとしての利用価値は高いと思われるので採用を検討する。
-
-** TODO リポジトリを本来のあるべき姿に戻す。
-当初は、typescriptによるライブラリ構築の練習がが目的だったにも関わらず、それを利用するアプリケーションレイヤーの実装まで行ってしまったため、
-コアライブラリとしての目的とは異なるものとなってしまった。
-
-アプリケーションレイヤーはnextjsで行っているが、リポジトリを分離して運用する。
-| gdsfeel-js       | コアライブラリのみ                                  |
+* GdsFeel Nextjs 実装
 | gdsfeel-next-app | gdsfee-jsパッケージを利用するnextjsアプリケーション |
+| [[https://github.com/kenjirofukuda/gdsfeel-js.git][gdsfeel-js]]       | コアライブラリのみ                                  |
 
-* +コンパイル+
-制作者（私）がjavascript環境に精通していないため、多量のエラーを除去しきれていない。
-よって、現在の記述は破綻している。
-
+* 実行
 #+begin_src bash :results raw :dir (file-name-directory (buffer-file-name))
   npm install
-  npm run build
+  npm run dev
 #+end_src
 
+- 親リポジトリ :: [[https://github.com/kenjirofukuda/gdsfeel-common][gdsfeel-common]]
 #+begin_example
-
-> build
-> run-s tsc fix
-
-
-> tsc
-> tsc -p .
-
-
-> fix
-> fix-esm-import-path dist/
-
-done.
-
-> build
-> run-s tsc fix
-
+.
+├── next.config.ts
+├── next-env.d.ts
+├── package.json
+├── package-lock.json
+├── postcss.config.mjs
+├── README.org
+├── seedgds
+│   └── test.gds
+├── src
+│   ├── app
+│   │   ├── element-item.tsx
+│   │   ├── element-list.tsx
+│   │   ├── favicon.ico
+│   │   ├── gds-canvas.tsx
+│   │   ├── globals.css
+│   │   ├── info-bar.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── structure-item.tsx
+│   │   ├── structure-list.tsx
+│   │   └── view-commands.tsx
+│   └── context
+│       └── gds-context.tsx
+├── tsconfig.json
+└── tsconfig.tsbuildinfo
 #+end_example
-
-** メンテナンススクリプト
-以下のスクリプトは製作者固有のディレクトリ構造なので実行しないこと
-
-#+caption: gdsfeel-phpへの実験転送
-#+begin_src bash :dir (file-name-directory (buffer-file-name))
-  npm run tsc-onejs
-  src=./dist/onejs/gdsall.js
-  dst=~/Nextcloud/prove/php-room/gdsfeel-php/ts-dist/gdsall.js
-  cp "$src" "$dst"
-#+end_src
-
-#+caption: gdsfeel-php2への実験転送
-#+begin_src bash :dir (file-name-directory (buffer-file-name))
-  npm run tsc-onejs
-  src=./dist/onejs/gdsall.js
-  dst=~/Nextcloud/prove/php-room/gdsfeel-php2/public/gdsfeel.js
-  cp "$src" "$dst"
-#+end_src
-
