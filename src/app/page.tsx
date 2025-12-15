@@ -22,7 +22,7 @@ export default async function Page() {
       <GdsProvider initialData={{
         structureName: '',
         library: undefined,
-        libraryObject: library?.asObject() && {}
+        libraryObject: library?.asObject() ?? {}
       }}>
         <div id="row1" className="header row">
         </div>
