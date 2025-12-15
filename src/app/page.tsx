@@ -8,7 +8,7 @@ import { Inform } from 'gdsfeel-js/server';
 import path from 'node:path';
 import { GdsProvider } from '@/context/gds-context';
 
-async function getLibrary(): Promise<Library> {
+async function getLibrary(): Promise<Library | undefined> {
   const inform = new Inform();
   inform.gdsPath = path.join(process.cwd(), 'seedgds', 'test.gds');
   await inform.run();
@@ -22,7 +22,7 @@ export default async function Page() {
       <GdsProvider initialData={{
         structureName: '',
         library: undefined,
-        libraryObject: library.asObject()
+        libraryObject: library?.asObject() && {}
       }}>
         <div id="row1" className="header row">
         </div>

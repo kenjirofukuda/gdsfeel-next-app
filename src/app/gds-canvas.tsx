@@ -19,7 +19,7 @@ import {
 } from 'gdsfeel-js/browser';
 
 export default function GdsCanvas() {
-  const { gdsContext, setGdsContext } = useGdsContext();
+  const { gdsContext } = useGdsContext();
   const structure = getActiveStructure(gdsContext);
   if (structure) {
     // console.log({rootClick: structure.root()});
@@ -36,7 +36,7 @@ export default function GdsCanvas() {
       mouseMoveHandler(e as MouseEvent, structureView);
     });
 
-    structureView.resizeFunction = (structureView) => {
+    structureView.resizeFunction = (structureView: StructureView) => {
       adjustPortSize(structureView);
       adjustRowCenter();
     }

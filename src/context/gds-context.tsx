@@ -1,12 +1,17 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, Context } from 'react';
-import { Library } from 'gdsfeel-js';
+import { Library, Structure } from 'gdsfeel-js';
 
-interface GdsContextType {
+interface GdsStationContext {
   structureName: string;
   libraryObject: object | undefined;
   library: Library | undefined;
+};
+
+export type GdsContextType = {
+  gdsContext: GdsStationContext;
+  setGdsContext: (_station: GdsStationContext) => void;
 };
 
 const GdsContext: Context<GdsContextType> = createContext<GdsContextType>({
@@ -15,12 +20,12 @@ const GdsContext: Context<GdsContextType> = createContext<GdsContextType>({
     libraryObject: undefined,
     library: undefined
   },
-  setGdsContext: (_context: GdsContextType) => {}
+  setGdsContext: (_context: GdsStationContext) => {}
 });
 
 
-export function GdsProvider({ children, initialData }: { children: ReactNode, initialData: GdsContextType}) {
-  const [gdsContext, setGdsContext ] = useState<GdsContextType>(initialData);
+export function GdsProvider({ children, initialData }: { children: ReactNode, initialData: GdsStationContext}) {
+  const [gdsContext, setGdsContext ] = useState<GdsStationContext>(initialData);
 
   return (
     <GdsContext.Provider value={ {gdsContext, setGdsContext }}>
@@ -29,11 +34,11 @@ export function GdsProvider({ children, initialData }: { children: ReactNode, in
   );
 }
 
-export function useGdsContext() {
+export function useGdsContext(): GdsContextType {
   return useContext<GdsContextType>(GdsContext);
 }
 
-export function getLibrary(context: GdsContextType): Library {
+export function getLibrary(context: GdsStationContext): Library {
   let library = context.library;
   if (! library) {
     library = Library.fromObject(context.libraryObject);
@@ -43,7 +48,7 @@ export function getLibrary(context: GdsContextType): Library {
   return library;
 }
 
-export function getActiveStructure(context: GdsContextType): Structure | undefined {
+export function getActiveStructure(context: GdsStationContext): Structure | undefined {
   let struct = undefined;
    if (context.structureName.length > 0) {
      struct = getLibrary(context).structureNamed(context.structureName);
