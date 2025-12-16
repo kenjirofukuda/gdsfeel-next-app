@@ -14,7 +14,9 @@ import {
   StructureView,
   loadIt,
   adjustPortSize,
-  mouseMoveHandler
+  mouseMoveHandler,
+  isWebKit,
+  adjustRowCenter
 } from 'gdsfeel-js/browser';
 
 export default function GdsCanvas() {
@@ -37,6 +39,9 @@ export default function GdsCanvas() {
 
     structureView.resizeFunction = (structureView: StructureView) => {
       adjustPortSize(structureView);
+      if (! isWebKit()) {
+        adjustRowCenter();
+      }
     }
     loadIt(structureView);
   }, []);
