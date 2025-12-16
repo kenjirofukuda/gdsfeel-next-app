@@ -14,8 +14,7 @@ import {
   StructureView,
   loadIt,
   adjustPortSize,
-  adjustRowCenter,
-  mouseMoveHandler,
+  mouseMoveHandler
 } from 'gdsfeel-js/browser';
 
 export default function GdsCanvas() {
@@ -38,7 +37,6 @@ export default function GdsCanvas() {
 
     structureView.resizeFunction = (structureView: StructureView) => {
       adjustPortSize(structureView);
-      adjustRowCenter();
     }
     loadIt(structureView);
   }, []);
